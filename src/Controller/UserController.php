@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Helper\RequestHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,8 +24,16 @@ class UserController extends BaseController
      */
     public function register(Request $request): Response
     {
-        $username = RequestHelper::getUsernameFromRequest($request);
+        $user = (new User())
+            ->setUsername(RequestHelper::getUsernameFromRequest($request))
+            ->setDisplayName(RequestHelper::getDisplayNameFromRequest($request))
+            ->setCredits(User::STARTING_CREDITS)
+        ;
 
-        return new Response();
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($user);
+        $em->flush();
+
+        return new Response($user->getDisplayName() . ' has registered for betting and been awarded ' . User::STARTING_CREDITS . ' credits. Use !betting to find out how to bet!');
     }
 }

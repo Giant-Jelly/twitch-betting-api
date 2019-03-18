@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class User
 {
+    const STARTING_CREDITS = 5000;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -32,6 +34,11 @@ class User
      * @ORM\OneToMany(targetEntity="App\Entity\Bet", mappedBy="user", orphanRemoval=true)
      */
     private $bets;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $displayName;
 
 
     public function __construct()
@@ -120,6 +127,25 @@ class User
                 $bet->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getDisplayName(): ?string
+    {
+        return $this->displayName;
+    }
+
+    /**
+     * @param string $displayName
+     * @return User
+     */
+    public function setDisplayName(string $displayName): self
+    {
+        $this->displayName = $displayName;
 
         return $this;
     }

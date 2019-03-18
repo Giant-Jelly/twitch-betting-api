@@ -15,4 +15,14 @@ class RequestHelper
         parse_str($request->headers->get('Nightbot-User'), $headerData);
         return $headerData['name'];
     }
+
+    /**
+     * @param Request $request
+     * @return string
+     */
+    public static function getDisplayNameFromRequest(Request $request): string
+    {
+        parse_str($request->headers->get('Nightbot-User'), $headerData);
+        return $headerData['displayName'];
+    }
 }

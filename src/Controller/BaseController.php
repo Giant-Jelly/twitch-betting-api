@@ -24,7 +24,6 @@ class BaseController extends AbstractController
      */
     public function test(Request $request): Response
     {
-
         return new Response('outcome: ' . $request->get('outcome'));
     }
 }
