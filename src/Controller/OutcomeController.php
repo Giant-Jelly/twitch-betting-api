@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Outcome;
+use App\Exception\MessageException;
 use App\Repository\OutcomeRepository;
 use App\Repository\RoundRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,8 +35,7 @@ class OutcomeController extends BaseController
             ->setName($request->get('name'))
             ->setPayout($request->get('payout', 0.5))
             ->setRound($round)
-            ->setChoice($outcomeRepo->count(['round' => $round]) + 1)
-        ;
+            ->setChoice($outcomeRepo->count(['round' => $round]) + 1);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($outcome);
@@ -51,12 +51,17 @@ class OutcomeController extends BaseController
      * @param RoundRepository $roundRepo
      * @return Response
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws MessageException
      */
     public function repeatOutcomes(Request $request, RoundRepository $roundRepo): Response
     {
         //Get second latest round
         $round = $roundRepo->getLatest(1);
-        $latestRound = $roundRepo->getLatest();
+        $latestRound = $roundRepo->getLatestOngoingRound();
+
+        if (!$latestRound) {
+            throw new MessageException('No current ongoing round');
+        }
 
         $em = $this->getDoctrine()->getManager();
 
@@ -72,6 +77,6 @@ class OutcomeController extends BaseController
 
         $em->flush();
 
-        return new Response('Outcomes have been repeated from '. $round->getName());
+        return new Response('Outcomes have been repeated from ' . $round->getName());
     }
 }

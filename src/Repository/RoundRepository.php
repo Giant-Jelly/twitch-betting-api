@@ -33,4 +33,18 @@ class RoundRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    /**
+     * @return Round|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getLatestOngoingRound(): ?Round
+    {
+        return $this->createQueryBuilder('r')
+            ->orderBy('r.id', 'DESC')
+            ->setMaxResults(1)
+            ->andWhere('r.finished = false')
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
