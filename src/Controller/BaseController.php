@@ -23,7 +23,7 @@ class BaseController extends AbstractController
      */
     public function test(Request $request): Response
     {
-        $headerData = parse_str($request->headers->get('Nightbot-User'));
+        parse_str($request->headers->get('Nightbot-User'), $headerData);
         return new Response($headerData['name']);
     }
 }
