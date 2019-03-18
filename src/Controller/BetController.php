@@ -37,14 +37,14 @@ class BetController extends BaseController
         $user = $em->getRepository(User::class)->findOneBy(['username' => RequestHelper::getUsernameFromRequest($request)]);
 
         if (!$user) {
-            throw new MessageException('Your user isn\'t registered to bet. Run !register first');
+            return new Response('Your user isn\'t registered to bet. Run !register first');
         }
 
         $round = $em->getRepository(Round::class)->getLatest();
         $outcome = $em->getRepository(Outcome::class)->findOneBy(['round' => $round, 'choice' => $request->get('outcome')]);
 
         if (!$outcome) {
-            throw new MessageException('That outcome doesn\'t exist');
+            return new Response('That outcome doesn\'t exist');
         }
 
         $bet = (new Bet())

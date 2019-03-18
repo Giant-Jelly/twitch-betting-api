@@ -60,7 +60,7 @@ class OutcomeController extends BaseController
         $latestRound = $roundRepo->getLatestOngoingRound();
 
         if (!$latestRound) {
-            throw new MessageException('No current ongoing round');
+            return new Response('No current ongoing round');
         }
 
         $em = $this->getDoctrine()->getManager();
