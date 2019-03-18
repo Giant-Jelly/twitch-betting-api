@@ -3,10 +3,10 @@
   gather_facts: no
 
   vars:
-    domain: reesbros.co.uk
-    domain_alias: www.reesbros.co.uk
-    project_dir: /var/www/rees-bros-c5/public
-    project_name: rees-bros-c5
+    domain: localhost
+    domain_alias: localhost
+    project_dir: /var/www/twitch-betting-api/public
+    project_name: twitch-betting-api
 
   pre_tasks:
 
