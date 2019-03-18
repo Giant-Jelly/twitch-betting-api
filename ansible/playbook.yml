@@ -1,0 +1,110 @@
+---
+- hosts: vm
+  gather_facts: no
+
+  vars:
+    domain: reesbros.co.uk
+    domain_alias: www.reesbros.co.uk
+    project_dir: /var/www/rees-bros-c5/public
+    project_name: rees-bros-c5
+
+  pre_tasks:
+
+  - name: install python2
+    raw: sudo apt-get -y install python-simplejson
+
+  tasks:
+
+  - name: Update Apt package manager repositories cache
+    become: true
+    apt:
+      update_cache: yes
+
+#  - name: Upgrade installed packages
+#    become: true
+#    apt:
+#      upgrade: safe
+
+  - name: Install MySQL server
+    become: true
+    apt:
+      name: mysql-server
+      state: latest
+
+  - name: Install Apache2 server
+    become: true
+    apt:
+      name: apache2
+      state: latest
+
+  - name: install low level tools
+    become: true
+    apt:
+      name: "{{ item }}"
+    with_items:
+      - zip
+      - unzip
+
+  - name: Add php 7.1 apt repo
+    become: true
+    apt_repository:
+      repo: "ppa:ondrej/php"
+
+  - name: Install php 7.1
+    become: true
+    apt:
+      name: "{{ item }}"
+      state: latest
+    with_items:
+      - libapache2-mod-php7.1
+      - php7.1-mcrypt
+      - php7.1-mysql
+      - php7.1-dom
+      - php7.1-mbstring
+      - php7.1-gd
+      - php7.1-zip
+
+  - name: Set apache config
+    become: true
+    template:
+      src: templates/apache.conf
+      dest: "/etc/apache2/sites-available/{{ project_name }}.conf"
+    notify: Restart apache
+
+  - name: enable rewrite mod
+    become: true
+    apache2_module:
+      name: rewrite
+      state: present
+    notify: Restart apache
+
+  - name: dissable default site
+    become: true
+    shell: a2dissite 000-default
+    notify: Restart apache
+
+  - name: enable site
+    become: true
+    shell: "a2ensite {{ project_name }}"
+    notify: Restart apache
+
+  - name: Download composer
+    script: scripts/install_composer.sh
+
+  - name: move composer globally
+    become: true
+    command: "mv composer.phar /usr/local/bin/composer"
+
+  - name: set permissions on composer
+    become: true
+    file:
+      path: "/usr/local/bin/composer"
+      mode: "a+x"
+
+  handlers:
+
+    - name: Restart apache
+      become: true
+      service:
+        name: apache2
+        state: restarted

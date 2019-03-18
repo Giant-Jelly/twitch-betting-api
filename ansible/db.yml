@@ -1,0 +1,21 @@
+---
+- hosts: vm
+  gather_facts: no
+
+  vars:
+    restore_db: convoy
+    db:
+      username: root
+      password: root
+    staging:
+      admin_user: root
+      admin_user_password: password
+      ip:
+      mysql_root_password: root
+
+
+  tasks:
+    - name: restore database
+      shell: mysql {{ restore_db }} -u {{ db.username }} -p'{{ db.password }}'  < <(sshpass -p'{{ staging.admin_user_password }}' ssh  -o StrictHostKeyChecking=no {{ staging.admin_user }}@{{ staging.ip }} "mysqldump -u root -p'{{ staging.mysql_root_password }}' {{ restore_db }}")
+      args:
+       executable: /bin/bash
