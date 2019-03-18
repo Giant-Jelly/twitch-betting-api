@@ -31,7 +31,7 @@ class RoundController extends BaseController
         $em->persist($round);
         $em->flush();
 
-        return new Response('New betting round created');
+        return new Response('New betting "'. $round->getName() .'" round created');
     }
 
     /**
@@ -44,7 +44,7 @@ class RoundController extends BaseController
     public function endRound(Request $request, RoundRepository $repo): Response
     {
         /** @var Round $round */
-        $round = $repo->findBy([], ['id' => 'desc'], 1);
+        $round = $repo->getLatest();
         $round->setFinished(true);
         $this->getDoctrine()->getManager()->flush();
 
