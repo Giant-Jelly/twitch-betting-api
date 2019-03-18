@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Round;
+use App\Helper\BetHelper;
 use App\Repository\OutcomeRepository;
 use App\Repository\RoundRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,6 +53,9 @@ class RoundController extends BaseController
 
         $outcome = $outcomeRepository->findOneBy(['round' => $round, 'choice' => $request->get('outcome')]);
         $outcome->setWon(true);
+
+        BetHelper::assignCredits($outcome);
+
         $this->getDoctrine()->getManager()->flush();
 
         return new Response('Round "' . $round->getName() . '" ended. ' . $outcome->getName() . ' won!');
