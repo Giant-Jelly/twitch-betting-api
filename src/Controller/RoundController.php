@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Round;
+use App\Repository\OutcomeRepository;
 use App\Repository\RoundRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,15 +40,20 @@ class RoundController extends BaseController
      *
      * @param Request $request
      * @param RoundRepository $repo
+     * @param OutcomeRepository $outcomeRepository
      * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function endRound(Request $request, RoundRepository $repo): Response
+    public function endRound(Request $request, RoundRepository $repo, OutcomeRepository $outcomeRepository): Response
     {
         /** @var Round $round */
         $round = $repo->getLatest();
         $round->setFinished(true);
+
+        $outcome = $outcomeRepository->findOneBy(['round' => $round, 'choice' => $request->get('outcome')]);
+        $outcome->setWon(true);
         $this->getDoctrine()->getManager()->flush();
 
-        return new Response('Round ' . $round->getName() . ' ended.');
+        return new Response('Round "' . $round->getName() . '" ended.');
     }
 }

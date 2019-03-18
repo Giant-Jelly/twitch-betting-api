@@ -24,6 +24,7 @@ class OutcomeController extends BaseController
      * @param RoundRepository $roundRepo
      * @param OutcomeRepository $outcomeRepo
      * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function newOutcome(Request $request, RoundRepository $roundRepo, OutcomeRepository $outcomeRepo): Response
     {
