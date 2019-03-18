@@ -43,4 +43,35 @@ class OutcomeController extends BaseController
 
         return new Response('Outcome ' . $outcome->getName() . ' created');
     }
+
+    /**
+     * @Route("/repeat", name="Repeat", methods={"GET"})
+     *
+     * @param Request $request
+     * @param RoundRepository $roundRepo
+     * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function repeatOutcomes(Request $request, RoundRepository $roundRepo): Response
+    {
+        //Get second latest round
+        $round = $roundRepo->getLatest(1);
+        $latestRound = $roundRepo->getLatest();
+
+        $em = $this->getDoctrine()->getManager();
+
+        foreach ($round->getOutcomes() as $outcome) {
+            $o = (new Outcome())
+                ->setChoice($outcome->getChoice())
+                ->setName($outcome->getName())
+                ->setPayout($outcome->getPayout())
+                ->setRound($latestRound);
+
+            $em->persist($o);
+        }
+
+        $em->flush();
+
+        return new Response('Outcomes have been repeated from '. $round->getName());
+    }
 }
