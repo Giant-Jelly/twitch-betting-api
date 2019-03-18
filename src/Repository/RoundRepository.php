@@ -25,7 +25,7 @@ class RoundRepository extends ServiceEntityRepository
     public function getLatest(): Round
     {
         return $this->createQueryBuilder('r')
-            ->orderBy('id', 'DESC')
+            ->orderBy('r.id', 'DESC')
             ->setMaxResults(1)
             ->getQuery()
             ->getResult();
