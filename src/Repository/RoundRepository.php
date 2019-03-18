@@ -20,14 +20,15 @@ class RoundRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Round
+     * @return Round|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getLatest(): Round
+    public function getLatest(): ?Round
     {
         return $this->createQueryBuilder('r')
             ->orderBy('r.id', 'DESC')
             ->setMaxResults(1)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
     }
 }
