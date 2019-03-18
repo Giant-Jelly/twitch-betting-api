@@ -7,9 +7,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\OutcomeRepository")
  */
-class User
+class Outcome
 {
     /**
      * @ORM\Id()
@@ -19,68 +19,67 @@ class User
     private $id;
 
     /**
+     * @ORM\Column(type="decimal", precision=10, scale=2)
+     */
+    private $payout;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
-    private $username;
+    private $name;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="boolean")
      */
-    private $credits;
+    private $won;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Bet", mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Bet", mappedBy="outcome", orphanRemoval=true)
      */
     private $bets;
-
 
     public function __construct()
     {
         $this->bets = new ArrayCollection();
     }
 
-    /**
-     * @return int|null
-     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return null|string
-     */
-    public function getUsername(): ?string
+    public function getPayout()
     {
-        return $this->username;
+        return $this->payout;
     }
 
-    /**
-     * @param string $username
-     * @return User
-     */
-    public function setUsername(string $username): self
+    public function setPayout($payout): self
     {
-        $this->username = $username;
+        $this->payout = $payout;
 
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getCredits(): ?int
+    public function getName(): ?string
     {
-        return $this->credits;
+        return $this->name;
     }
 
-    /**
-     * @param int $credits
-     * @return User
-     */
-    public function setCredits(int $credits): self
+    public function setName(string $name): self
     {
-        $this->credits = $credits;
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getWon(): ?bool
+    {
+        return $this->won;
+    }
+
+    public function setWon(bool $won): self
+    {
+        $this->won = $won;
 
         return $this;
     }
@@ -93,31 +92,23 @@ class User
         return $this->bets;
     }
 
-    /**
-     * @param Bet $bet
-     * @return User
-     */
     public function addBet(Bet $bet): self
     {
         if (!$this->bets->contains($bet)) {
             $this->bets[] = $bet;
-            $bet->setUser($this);
+            $bet->setOutcome($this);
         }
 
         return $this;
     }
 
-    /**
-     * @param Bet $bet
-     * @return User
-     */
     public function removeBet(Bet $bet): self
     {
         if ($this->bets->contains($bet)) {
             $this->bets->removeElement($bet);
             // set the owning side to null (unless already changed)
-            if ($bet->getUser() === $this) {
-                $bet->setUser(null);
+            if ($bet->getOutcome() === $this) {
+                $bet->setOutcome(null);
             }
         }
 

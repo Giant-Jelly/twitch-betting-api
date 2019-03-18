@@ -7,21 +7,23 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/api/user", name="ApiUser")
+ * @Route("/api/betting", name="ApiBetting")
  *
- * Class UserController
+ * Class BetController
  * @package App\Controller
  */
-class UserController extends BaseController
+class BetController extends BaseController
 {
     /**
-     * @Route("/register", name="Register", methods={"GET"})
+     * @Route("/bet", name="Bet", methods={"POST"})
      *
      * @param Request $request
      * @return Response
      */
-    public function register(Request $request): Response
+    public function bet(Request $request): Response
     {
-        return new Response('test');
+
+
+        return new Response('You bet');
     }
 }

@@ -63,6 +63,7 @@
       - php7.1-mbstring
       - php7.1-gd
       - php7.1-zip
+      - php7.1-curl
 
   - name: Set apache config
     become: true
