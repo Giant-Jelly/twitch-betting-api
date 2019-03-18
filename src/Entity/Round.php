@@ -31,7 +31,7 @@ class Round
     /**
      * @ORM\Column(type="boolean")
      */
-    private $finished;
+    private $finished = false;
 
     public function __construct()
     {
