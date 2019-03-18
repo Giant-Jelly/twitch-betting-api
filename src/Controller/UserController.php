@@ -22,6 +22,6 @@ class UserController extends BaseController
      */
     public function register(Request $request): Response
     {
-        return new Response('test');
+        return new Response($request->headers->get('Nightbot-User'));
     }
 }

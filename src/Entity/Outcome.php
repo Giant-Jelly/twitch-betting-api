@@ -43,16 +43,26 @@ class Outcome
         $this->bets = new ArrayCollection();
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return mixed
+     */
     public function getPayout()
     {
         return $this->payout;
     }
 
+    /**
+     * @param $payout
+     * @return Outcome
+     */
     public function setPayout($payout): self
     {
         $this->payout = $payout;
@@ -60,11 +70,18 @@ class Outcome
         return $this;
     }
 
+    /**
+     * @return null|string
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     * @return Outcome
+     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -72,11 +89,18 @@ class Outcome
         return $this;
     }
 
+    /**
+     * @return bool|null
+     */
     public function getWon(): ?bool
     {
         return $this->won;
     }
 
+    /**
+     * @param bool $won
+     * @return Outcome
+     */
     public function setWon(bool $won): self
     {
         $this->won = $won;
@@ -92,6 +116,10 @@ class Outcome
         return $this->bets;
     }
 
+    /**
+     * @param Bet $bet
+     * @return Outcome
+     */
     public function addBet(Bet $bet): self
     {
         if (!$this->bets->contains($bet)) {
@@ -102,6 +130,10 @@ class Outcome
         return $this;
     }
 
+    /**
+     * @param Bet $bet
+     * @return Outcome
+     */
     public function removeBet(Bet $bet): self
     {
         if ($this->bets->contains($bet)) {
