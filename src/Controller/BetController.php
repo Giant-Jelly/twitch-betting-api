@@ -7,6 +7,7 @@ use App\Entity\Outcome;
 use App\Entity\Round;
 use App\Entity\User;
 use App\Exception\MessageException;
+use App\Helper\BetHelper;
 use App\Helper\RequestHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,6 +54,7 @@ class BetController extends BaseController
         ;
 
         $em->persist($bet);
+        BetHelper::adjustCredits($user, - $request->get('amount'));
         $em->flush();
 
         return new Response('You bet ' . $bet->getAmount() . ' on ' . $outcome->getName());
