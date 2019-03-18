@@ -40,10 +40,10 @@ class BetController extends BaseController
         }
 
         $round = $em->getRepository(Round::class)->getLatest();
-        $outcome = $em->getRepository(Outcome::class)->findOneBy(['round' => $round, 'choice' => $request->get('choice')]);
+        $outcome = $em->getRepository(Outcome::class)->findOneBy(['round' => $round, 'choice' => $request->get('outcome')]);
 
         if (!$outcome) {
-            throw new MessageException('That outcome doesn\' exist');
+            throw new MessageException('That outcome doesn\'t exist');
         }
 
         $bet = (new Bet())
@@ -55,6 +55,6 @@ class BetController extends BaseController
         $em->persist($bet);
         $em->flush();
 
-        return new Response('You bet ' . $bet->getAmount() . ' on outcome NO:' . $outcome->getChoice());
+        return new Response('You bet ' . $bet->getAmount() . ' on ' . $outcome->getName());
     }
 }

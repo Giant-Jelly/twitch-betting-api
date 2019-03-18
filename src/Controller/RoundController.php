@@ -54,6 +54,6 @@ class RoundController extends BaseController
         $outcome->setWon(true);
         $this->getDoctrine()->getManager()->flush();
 
-        return new Response('Round "' . $round->getName() . '" ended.');
+        return new Response('Round "' . $round->getName() . '" ended. ' . $outcome->getName() . ' won!');
     }
 }
