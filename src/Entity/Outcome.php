@@ -31,12 +31,23 @@ class Outcome
     /**
      * @ORM\Column(type="boolean")
      */
-    private $won;
+    private $won = false;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Bet", mappedBy="outcome", orphanRemoval=true)
      */
     private $bets;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Round", inversedBy="outcomes")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $round;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $choice;
 
     public function __construct()
     {
@@ -143,6 +154,44 @@ class Outcome
                 $bet->setOutcome(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Round|null
+     */
+    public function getRound(): ?Round
+    {
+        return $this->round;
+    }
+
+    /**
+     * @param Round|null $round
+     * @return Outcome
+     */
+    public function setRound(?Round $round): self
+    {
+        $this->round = $round;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getChoice(): ?int
+    {
+        return $this->choice;
+    }
+
+    /**
+     * @param int $choice
+     * @return Outcome
+     */
+    public function setChoice(int $choice): self
+    {
+        $this->choice = $choice;
 
         return $this;
     }

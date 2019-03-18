@@ -13,6 +13,9 @@
   - name: install python2
     raw: sudo apt-get -y install python-simplejson
 
+  - name: install python2 mysql
+    raw: sudo apt-get -y install python-mysqldb
+
   tasks:
 
   - name: Update Apt package manager repositories cache
@@ -101,6 +104,13 @@
     file:
       path: "/usr/local/bin/composer"
       mode: "a+x"
+
+  - name: set mysql root password
+    mysql_user: name=root host={{ item }} password=Themage1
+    with_items:
+    - 127.0.0.1
+    - ::1
+    - localhost
 
   handlers:
 
