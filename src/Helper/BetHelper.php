@@ -25,7 +25,7 @@ class BetHelper
 
         foreach ($bets as $bet) {
             $user = $bet->getUser();
-            $user->setCredits(self::adjustCredits($user, self::calculateWinnings($outcome->getPayout(), $bet->getAmount())));
+            self::adjustCredits($user, self::calculateWinnings($outcome->getPayout(), $bet->getAmount()));
         }
     }
 
@@ -34,7 +34,7 @@ class BetHelper
      * @param int $amount
      * @return int
      */
-    public function calculateWinnings(float $odds, int $amount): int
+    public static function calculateWinnings(float $odds, int $amount): int
     {
         return ($amount * $odds) + $amount;
     }
