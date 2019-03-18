@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Helper\RequestHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +24,7 @@ class BaseController extends AbstractController
      */
     public function test(Request $request): Response
     {
-        parse_str($request->headers->get('Nightbot-User'), $headerData);
-        return new Response($headerData['name']);
+
+        return new Response('outcome: ' . $request->get('outcome'));
     }
 }

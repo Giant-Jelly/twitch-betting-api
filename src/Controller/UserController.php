@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Helper\RequestHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,6 +23,8 @@ class UserController extends BaseController
      */
     public function register(Request $request): Response
     {
-        return new Response($request->headers->get('Nightbot-User'));
+        $username = RequestHelper::getUsernameFromRequest($request);
+
+        return new Response();
     }
 }
