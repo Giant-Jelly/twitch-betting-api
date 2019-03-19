@@ -100,7 +100,7 @@ class OutcomeController extends BaseController
         $response = '';
 
         foreach ($outcomes as $outcome) {
-            $response .= '| '.$outcome->getChoice() . ') ' . $outcome->getName() .' |';
+            $response .= '| '.$outcome->getChoice() . '. ' . $outcome->getName() .' |';
         }
 
         return new Response($response);

@@ -77,9 +77,24 @@ class UserController extends BaseController
 
         $response = '';
         foreach ($users as $key => $user) {
-            $response .= $key + 1 . '. ' . $user->getDisplayName() . ' | ';
+            $response .= $key + 1 . '. ' . $user->getDisplayName() . ' - ' . $user->getCredits() . ' | ';
         };
 
         return new Response($response);
+    }
+
+    /**
+     * @Route("/credits", name="credits", methods={"GET"})
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function credits(Request $request): Response
+    {
+        $user = $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy([
+            'username' => RequestHelper::getUsernameFromRequest($request)
+        ]);
+
+        return new Response('You have '. $user->getCredits() .' credits');
     }
 }
