@@ -95,6 +95,21 @@ class UserController extends BaseController
             'username' => RequestHelper::getUsernameFromRequest($request)
         ]);
 
-        return new Response('You have '. $user->getCredits() .' credits');
+        return new Response('You have ' . $user->getCredits() . ' credits');
+    }
+
+    /**
+     * @Route("/request", name="Request", methods={"GET"})
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function request(Request $request): Response
+    {
+        $user = $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy([
+            'username' => RequestHelper::getUsernameFromRequest($request)
+        ]);
+
+        return new Response($user->getDisplayName() . ' has spent their credits on a request @GiantJelly');
     }
 }
