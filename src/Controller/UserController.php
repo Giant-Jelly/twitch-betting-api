@@ -110,6 +110,6 @@ class UserController extends BaseController
             'username' => RequestHelper::getUsernameFromRequest($request)
         ]);
 
-        return new Response($user->getDisplayName() . ' has spent their credits on a request @GiantJelly');
+        return new Response($user->getDisplayName() . ' has spent their credits on a request @GiantJelly. (Matt and Nathan will fulfill your request in a moment.)');
     }
 }
