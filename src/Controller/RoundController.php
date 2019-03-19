@@ -60,4 +60,36 @@ class RoundController extends BaseController
 
         return new Response('Round "' . $round->getName() . '" ended. ' . $outcome->getName() . ' won!');
     }
+
+    /**
+     * @Route("/open", name="Open", methods={"GET"})
+     *
+     * @param RoundRepository $roundRepository
+     * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function openBetting(RoundRepository $roundRepository): Response
+    {
+        $round = $roundRepository->getLatestOngoingRound();
+        $round->setOpen(true);
+        $this->getDoctrine()->getManager()->flush();
+
+        return new Response('Betting round OPEN! Start betting with with !bet');
+    }
+
+    /**
+     * @Route("/close", name="Close", methods={"GET"})
+     *
+     * @param RoundRepository $roundRepository
+     * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function closeBetting(RoundRepository $roundRepository): Response
+    {
+        $round = $roundRepository->getLatestOngoingRound();
+        $round->setOpen(false);
+        $this->getDoctrine()->getManager()->flush();
+
+        return new Response('Betting round CLOSED!');
+    }
 }

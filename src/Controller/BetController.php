@@ -39,7 +39,12 @@ class BetController extends BaseController
             return new Response('Your user isn\'t registered to bet. Run !register first');
         }
 
-        $round = $em->getRepository(Round::class)->getLatest();
+        $round = $em->getRepository(Round::class)->getLatestOngoingRound();
+
+        if (!$round->getOpen()) {
+            return new Response('Betting is currently closed. Wait until the next round');
+        }
+
         $outcome = $em->getRepository(Outcome::class)->findOneBy(['round' => $round, 'choice' => $request->get('outcome')]);
 
         if (!$outcome) {
@@ -49,11 +54,10 @@ class BetController extends BaseController
         $bet = (new Bet())
             ->setUser($user)
             ->setOutcome($outcome)
-            ->setAmount($request->get('amount'))
-        ;
+            ->setAmount($request->get('amount'));
 
         $em->persist($bet);
-        BetHelper::adjustCredits($user, - $request->get('amount'));
+        BetHelper::adjustCredits($user, -$request->get('amount'));
         $em->flush();
 
         return new Response('You bet ' . $bet->getAmount() . ' on ' . $outcome->getName());

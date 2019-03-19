@@ -33,6 +33,11 @@ class Round
      */
     private $finished = false;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $open = false;
+
     public function __construct()
     {
         $this->outcomes = new ArrayCollection();
@@ -119,6 +124,18 @@ class Round
     public function setFinished(bool $finished): self
     {
         $this->finished = $finished;
+
+        return $this;
+    }
+
+    public function getOpen(): ?bool
+    {
+        return $this->open;
+    }
+
+    public function setOpen(bool $open): self
+    {
+        $this->open = $open;
 
         return $this;
     }

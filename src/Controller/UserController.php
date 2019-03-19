@@ -35,7 +35,7 @@ class UserController extends BaseController
         $em->persist($user);
         $em->flush();
 
-        return new Response($user->getDisplayName() . ' has registered for betting and been awarded ' . User::STARTING_CREDITS . ' credits. Use !betting to find out how to bet!');
+        return new Response($user->getDisplayName() . ' has registered for betting and been awarded ' . User::STARTING_CREDITS . ' credits. Use !commands to find out how to bet!');
     }
 
     /**
