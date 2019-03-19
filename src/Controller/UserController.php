@@ -77,7 +77,7 @@ class UserController extends BaseController
 
         $response = '';
         foreach ($users as $key => $user) {
-            $response .= $key . '. ' . $user->getDisplayName() . ' | ';
+            $response .= $key + 1 . '. ' . $user->getDisplayName() . ' | ';
         };
 
         return new Response($response);
