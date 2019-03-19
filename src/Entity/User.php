@@ -44,11 +44,12 @@ class User
     /**
      * @ORM\Column(type="datetime")
      */
-    private $creditRedemptionDate;
+    private $creditRedemptionDate ;
 
 
     public function __construct()
     {
+        $this->creditRedemptionDate = new \DateTime();
         $this->bets = new ArrayCollection();
     }
 
