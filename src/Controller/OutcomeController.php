@@ -91,7 +91,7 @@ class OutcomeController extends BaseController
     {
         $round = $roundRepository->getLatestOngoingRound();
         /** @var Outcome[] $outcomes */
-        $outcomes = $outcomeRepository->findBy(['round' => $round], ['choice' => 'DESC']);
+        $outcomes = $outcomeRepository->findBy(['round' => $round], ['choice' => 'ASC']);
 
         if (count($outcomes) < 1) {
             return new Response('There are no outcomes currently');
@@ -100,7 +100,7 @@ class OutcomeController extends BaseController
         $response = '';
 
         foreach ($outcomes as $outcome) {
-            $response .= $outcome->getChoice() . ') ' . $outcome->getName() .'\n\r';
+            $response .= $outcome->getChoice() . ') ' . $outcome->getName() .' || ';
         }
 
         return new Response($response);
