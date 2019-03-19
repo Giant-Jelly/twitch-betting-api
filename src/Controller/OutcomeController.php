@@ -51,7 +51,6 @@ class OutcomeController extends BaseController
      * @param RoundRepository $roundRepo
      * @return Response
      * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws MessageException
      */
     public function repeatOutcomes(Request $request, RoundRepository $roundRepo): Response
     {

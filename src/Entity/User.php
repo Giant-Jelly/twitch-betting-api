@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 class User
 {
     const STARTING_CREDITS = 5000;
+    const REDEEMABLE_CREDIT_AMOUNT = 1000;
 
     /**
      * @ORM\Id()
@@ -39,6 +40,11 @@ class User
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $displayName;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $creditRedemptionDate;
 
 
     public function __construct()
@@ -146,6 +152,18 @@ class User
     public function setDisplayName(string $displayName): self
     {
         $this->displayName = $displayName;
+
+        return $this;
+    }
+
+    public function getCreditRedemptionDate(): ?\DateTimeInterface
+    {
+        return $this->creditRedemptionDate;
+    }
+
+    public function setCreditRedemptionDate(\DateTimeInterface $creditRedemptionDate): self
+    {
+        $this->creditRedemptionDate = $creditRedemptionDate;
 
         return $this;
     }

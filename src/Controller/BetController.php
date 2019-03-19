@@ -26,7 +26,6 @@ class BetController extends BaseController
      *
      * @param Request $request
      * @return Response
-     * @throws MessageException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function bet(Request $request): Response

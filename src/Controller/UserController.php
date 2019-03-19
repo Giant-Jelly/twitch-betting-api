@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Helper\BetHelper;
 use App\Helper\RequestHelper;
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,13 +29,38 @@ class UserController extends BaseController
         $user = (new User())
             ->setUsername(RequestHelper::getUsernameFromRequest($request))
             ->setDisplayName(RequestHelper::getDisplayNameFromRequest($request))
-            ->setCredits(User::STARTING_CREDITS)
-        ;
+            ->setCredits(User::STARTING_CREDITS);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
         $em->flush();
 
         return new Response($user->getDisplayName() . ' has registered for betting and been awarded ' . User::STARTING_CREDITS . ' credits. Use !betting to find out how to bet!');
+    }
+
+    /**
+     * @Route("/free-credits", name="FreeCredits", methods={"GET"})
+     *
+     * @param Request $request
+     * @param UserRepository $repo
+     * @return Response
+     */
+    public function freeCredits(Request $request, UserRepository $repo): Response
+    {
+        $user = $repo->findOneBy(['username' => RequestHelper::getUsernameFromRequest($request)]);
+
+        if (!$user) {
+            return new Response('Your user isn\'t registered to bet. Run !register first');
+        }
+
+        if ($user->getCreditRedemptionDate()->format('Y-m-d') >= (new \DateTime())->format('Y-m-d')) {
+            return new Response('You have already redeemed your free credits today. Come back tomorrow');
+        }
+
+        BetHelper::adjustCredits($user, User::REDEEMABLE_CREDIT_AMOUNT);
+        $user->setCreditRedemptionDate((new \DateTime()));
+        $this->getDoctrine()->getManager()->flush();
+
+        return new Response('You have redeemed your daily credits. ' . User::REDEEMABLE_CREDIT_AMOUNT . ' credits have been added to your account');
     }
 }
