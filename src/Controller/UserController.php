@@ -63,4 +63,23 @@ class UserController extends BaseController
 
         return new Response('You have redeemed your daily credits. ' . User::REDEEMABLE_CREDIT_AMOUNT . ' credits have been added to your account');
     }
+
+    /**
+     * @Route("/leaderboard", name="Leaderboard", methods={"GET"})
+     *
+     * @param Request $request
+     * @param UserRepository $userRepository
+     * @return Response
+     */
+    public function leaderboard(Request $request, UserRepository $userRepository): Response
+    {
+        $users = $userRepository->findBy([], ['credits' => 'DESC'], 5);
+
+        $response = '';
+        foreach ($users as $key => $user) {
+            $response .= $key . '. ' . $user->getDisplayName() . ' | ';
+        };
+
+        return new Response($response);
+    }
 }
