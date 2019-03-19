@@ -78,4 +78,31 @@ class OutcomeController extends BaseController
 
         return new Response('Outcomes have been repeated from ' . $round->getName());
     }
+
+    /**
+     * @Route("/list", name="List", methods={"GET"})
+     *
+     * @param OutcomeRepository $outcomeRepository
+     * @param RoundRepository $roundRepository
+     * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function listOutcomes(OutcomeRepository $outcomeRepository, RoundRepository $roundRepository): Response
+    {
+        $round = $roundRepository->getLatestOngoingRound();
+        /** @var Outcome[] $outcomes */
+        $outcomes = $outcomeRepository->findBy(['round' => $round], ['choice' => 'DESC']);
+
+        if (count($outcomes) < 1) {
+            return new Response('There are no outcomes currently');
+        }
+
+        $response = '';
+
+        foreach ($outcomes as $outcome) {
+            $response .= $outcome->getChoice() . ') ' . $outcome->getName() .'\n\r';
+        }
+
+        return new Response($response);
+    }
 }
