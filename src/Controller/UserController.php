@@ -18,6 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class UserController extends BaseController
 {
+    const REQUEST_PRICE = 10000;
+
     /**
      * @Route("/register", name="Register", methods={"GET"})
      *
@@ -109,6 +111,13 @@ class UserController extends BaseController
         $user = $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy([
             'username' => RequestHelper::getUsernameFromRequest($request)
         ]);
+
+        if(!$user->getCredits() > self::REQUEST_PRICE) {
+            return new Response('You do not have enough credits to make a request. You have '. $user->getCredits() .'. You need '.self::REQUEST_PRICE);
+        }
+
+        BetHelper::adjustCredits($user, self::REQUEST_PRICE);
+        $this->getDoctrine()->getManager()->flush();
 
         return new Response($user->getDisplayName() . ' has spent their credits on a request @GiantJelly. (Matt and Nathan will fulfill your request in a moment.)');
     }
