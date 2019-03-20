@@ -28,6 +28,14 @@ class UserController extends BaseController
      */
     public function register(Request $request): Response
     {
+        $user = $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy([
+            'username' => RequestHelper::getUsernameFromRequest($request)
+        ]);
+
+        if ($user) {
+            return new Response($user->getDisplayName() . ' has already registered for betting. Use !betting for more instructions');
+        }
+
         $user = (new User())
             ->setUsername(RequestHelper::getUsernameFromRequest($request))
             ->setDisplayName(RequestHelper::getDisplayNameFromRequest($request))
@@ -37,7 +45,7 @@ class UserController extends BaseController
         $em->persist($user);
         $em->flush();
 
-        return new Response($user->getDisplayName() . ' has registered for betting and been awarded ' . User::STARTING_CREDITS . ' credits. Use !commands to find out how to bet!');
+        return new Response($user->getDisplayName() . ' has registered for betting and been awarded ' . User::STARTING_CREDITS . ' credits. Use !betting to find out how to bet.');
     }
 
     /**
@@ -112,11 +120,11 @@ class UserController extends BaseController
             'username' => RequestHelper::getUsernameFromRequest($request)
         ]);
 
-        if($user->getCredits() < self::REQUEST_PRICE) {
-            return new Response('You do not have enough credits to make a request. You have '. $user->getCredits() .'. You need '.self::REQUEST_PRICE);
+        if ($user->getCredits() < self::REQUEST_PRICE) {
+            return new Response('You do not have enough credits to make a request. You have ' . $user->getCredits() . '. You need ' . self::REQUEST_PRICE);
         }
 
-        BetHelper::adjustCredits($user, - self::REQUEST_PRICE);
+        BetHelper::adjustCredits($user, -self::REQUEST_PRICE);
         $this->getDoctrine()->getManager()->flush();
 
         return new Response($user->getDisplayName() . ' has spent their credits on a request @GiantJelly. (Matt and Nathan will fulfill your request in a moment.)');
