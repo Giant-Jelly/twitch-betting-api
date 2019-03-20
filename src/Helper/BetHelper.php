@@ -38,4 +38,20 @@ class BetHelper
     {
         return ($amount * $odds) + $amount;
     }
+
+    /**
+     * @param Outcome $outcome
+     * @return array
+     */
+    public static function getWinners(Outcome $outcome): array
+    {
+        $bets = $outcome->getBets();
+
+        $users = [];
+        foreach ($bets as $bet) {
+            $users[] = $bet->getUser()->getDisplayName() . ' - '. self::calculateWinnings($outcome->getPayout(), $bet->getAmount());
+        }
+
+        return $users;
+    }
 }

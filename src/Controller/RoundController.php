@@ -63,7 +63,9 @@ class RoundController extends BaseController
 
         $this->getDoctrine()->getManager()->flush();
 
-        return new Response('Round "' . $round->getName() . '" ended. ' . $outcome->getName() . ' won!');
+        $winners = BetHelper::getWinners($outcome);
+
+        return new Response('Round "' . $round->getName() . '" ended. ' . $outcome->getName() . ' won! Winners: ' . implode(' | ', $winners));
     }
 
     /**
