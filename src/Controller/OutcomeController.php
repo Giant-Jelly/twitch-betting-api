@@ -6,6 +6,7 @@ use App\Entity\Outcome;
 use App\Exception\MessageException;
 use App\Repository\OutcomeRepository;
 use App\Repository\RoundRepository;
+use App\Response\ApiResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,10 +25,10 @@ class OutcomeController extends BaseController
      * @param Request $request
      * @param RoundRepository $roundRepo
      * @param OutcomeRepository $outcomeRepo
-     * @return Response
+     * @return ApiResponse
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function newOutcome(Request $request, RoundRepository $roundRepo, OutcomeRepository $outcomeRepo): Response
+    public function newOutcome(Request $request, RoundRepository $roundRepo, OutcomeRepository $outcomeRepo): ApiResponse
     {
         $round = $roundRepo->getLatest();
 
@@ -41,7 +42,7 @@ class OutcomeController extends BaseController
         $em->persist($outcome);
         $em->flush();
 
-        return new Response('Outcome ' . $outcome->getName() . ' created');
+        return new ApiResponse('Outcome ' . $outcome->getName() . ' created');
     }
 
     /**
@@ -59,7 +60,7 @@ class OutcomeController extends BaseController
         $latestRound = $roundRepo->getLatestOngoingRound();
 
         if (!$latestRound) {
-            return new Response('No current ongoing round');
+            return new ApiResponse('No current ongoing round');
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -76,7 +77,7 @@ class OutcomeController extends BaseController
 
         $em->flush();
 
-        return new Response('Outcomes have been repeated from ' . $round->getName());
+        return new ApiResponse('Outcomes have been repeated from ' . $round->getName());
     }
 
     /**
@@ -94,7 +95,7 @@ class OutcomeController extends BaseController
         $outcomes = $outcomeRepository->findBy(['round' => $round], ['choice' => 'ASC']);
 
         if (count($outcomes) < 1) {
-            return new Response('There are no outcomes currently');
+            return new ApiResponse('There are no outcomes currently');
         }
 
         $response = '';
@@ -103,6 +104,6 @@ class OutcomeController extends BaseController
             $response .= '| '.$outcome->getChoice() . '. ' . $outcome->getName() .' |';
         }
 
-        return new Response($response);
+        return new ApiResponse($response);
     }
 }

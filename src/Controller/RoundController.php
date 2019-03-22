@@ -6,6 +6,7 @@ use App\Entity\Round;
 use App\Helper\BetHelper;
 use App\Repository\OutcomeRepository;
 use App\Repository\RoundRepository;
+use App\Response\ApiResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,7 +34,7 @@ class RoundController extends BaseController
         $em->persist($round);
         $em->flush();
 
-        return new Response('New betting "' . $round->getName() . '" round created');
+        return new ApiResponse('New betting "' . $round->getName() . '" round created');
     }
 
     /**
@@ -42,16 +43,16 @@ class RoundController extends BaseController
      * @param Request $request
      * @param RoundRepository $repo
      * @param OutcomeRepository $outcomeRepository
-     * @return Response
+     * @return ApiResponse
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function endRound(Request $request, RoundRepository $repo, OutcomeRepository $outcomeRepository): Response
+    public function endRound(Request $request, RoundRepository $repo, OutcomeRepository $outcomeRepository): ApiResponse
     {
         /** @var Round $round */
         $round = $repo->getLatestOngoingRound();
 
         if (!$round) {
-            return new Response('There are no currently ongoing rounds');
+            return new ApiResponse('There are no currently ongoing rounds');
         }
 
         $round->setFinished(true);
@@ -65,7 +66,7 @@ class RoundController extends BaseController
 
         $winners = BetHelper::getWinners($outcome);
 
-        return new Response('Round "' . $round->getName() . '" ended. ' . $outcome->getName() . ' won! Winners: ' . implode(' | ', $winners));
+        return new ApiResponse('Round "' . $round->getName() . '" ended. ' . $outcome->getName() . ' won! Winners: ' . implode(' | ', $winners));
     }
 
     /**
@@ -81,7 +82,7 @@ class RoundController extends BaseController
         $round->setOpen(true);
         $this->getDoctrine()->getManager()->flush();
 
-        return new Response('Betting round OPEN! Start betting with with !bet');
+        return new ApiResponse('Betting round OPEN! Start betting with with !bet');
     }
 
     /**
@@ -97,6 +98,6 @@ class RoundController extends BaseController
         $round->setOpen(false);
         $this->getDoctrine()->getManager()->flush();
 
-        return new Response('Betting round CLOSED!');
+        return new ApiResponse('Betting round CLOSED!');
     }
 }

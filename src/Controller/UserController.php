@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Helper\BetHelper;
 use App\Helper\RequestHelper;
 use App\Repository\UserRepository;
+use App\Response\ApiResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,7 +34,7 @@ class UserController extends BaseController
         ]);
 
         if ($user) {
-            return new Response($user->getDisplayName() . ' has already registered for betting. Use !betting for more instructions');
+            return new ApiResponse($user->getDisplayName() . ' has already registered for betting. Use !betting for more instructions');
         }
 
         $user = (new User())
@@ -45,7 +46,7 @@ class UserController extends BaseController
         $em->persist($user);
         $em->flush();
 
-        return new Response($user->getDisplayName() . ' has registered for betting and been awarded ' . User::STARTING_CREDITS . ' credits. Use !betting to find out how to bet.');
+        return new ApiResponse($user->getDisplayName() . ' has registered for betting and been awarded ' . User::STARTING_CREDITS . ' credits. Use !betting to find out how to bet.');
     }
 
     /**
@@ -60,18 +61,18 @@ class UserController extends BaseController
         $user = $repo->findOneBy(['username' => RequestHelper::getUsernameFromRequest($request)]);
 
         if (!$user) {
-            return new Response('Your user isn\'t registered to bet. Run !register first');
+            return new ApiResponse('Your user isn\'t registered to bet. Run !register first');
         }
 
         if ($user->getCreditRedemptionDate()->format('Y-m-d') >= (new \DateTime())->format('Y-m-d')) {
-            return new Response('You have already redeemed your free credits today. Come back tomorrow');
+            return new ApiResponse('You have already redeemed your free credits today. Come back tomorrow');
         }
 
         BetHelper::adjustCredits($user, User::REDEEMABLE_CREDIT_AMOUNT);
         $user->setCreditRedemptionDate((new \DateTime()));
         $this->getDoctrine()->getManager()->flush();
 
-        return new Response('You have redeemed your daily credits. ' . User::REDEEMABLE_CREDIT_AMOUNT . ' credits have been added to your account');
+        return new ApiResponse('You have redeemed your daily credits. ' . User::REDEEMABLE_CREDIT_AMOUNT . ' credits have been added to your account');
     }
 
     /**
@@ -90,7 +91,7 @@ class UserController extends BaseController
             $response .= $key + 1 . '. ' . $user->getDisplayName() . ' - ' . $user->getCredits() . ' | ';
         };
 
-        return new Response($response);
+        return new ApiResponse($response);
     }
 
     /**
@@ -105,7 +106,7 @@ class UserController extends BaseController
             'username' => RequestHelper::getUsernameFromRequest($request)
         ]);
 
-        return new Response('You have ' . $user->getCredits() . ' credits');
+        return new ApiResponse('You have ' . $user->getCredits() . ' credits');
     }
 
     /**
@@ -121,12 +122,12 @@ class UserController extends BaseController
         ]);
 
         if ($user->getCredits() < self::REQUEST_PRICE) {
-            return new Response('You do not have enough credits to make a request. You have ' . $user->getCredits() . '. You need ' . self::REQUEST_PRICE);
+            return new ApiResponse('You do not have enough credits to make a request. You have ' . $user->getCredits() . '. You need ' . self::REQUEST_PRICE);
         }
 
         BetHelper::adjustCredits($user, -self::REQUEST_PRICE);
         $this->getDoctrine()->getManager()->flush();
 
-        return new Response($user->getDisplayName() . ' has spent their credits on a request @GiantJelly. (Matt and Nathan will fulfill your request in a moment.)');
+        return new ApiResponse($user->getDisplayName() . ' has spent their credits on a request @GiantJelly. (Matt and Nathan will fulfill your request in a moment.)');
     }
 }
