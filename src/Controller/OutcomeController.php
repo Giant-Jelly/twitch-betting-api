@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Outcome;
 use App\Exception\MessageException;
+use App\Helper\BetHelper;
 use App\Helper\ResponseHelper;
 use App\Repository\OutcomeRepository;
 use App\Repository\RoundRepository;
@@ -120,7 +121,8 @@ class OutcomeController extends BaseController
             $entries[] = [
                 'id' => $outcome->getId(),
                 'name' => $outcome->getName(),
-                'payout' => $outcome->getPayout()
+                'payout' => $outcome->getPayout(),
+                'totalBets' => BetHelper::getTotalBetsAmount($outcome)
             ];
         }
 

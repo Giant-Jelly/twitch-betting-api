@@ -4,6 +4,7 @@ namespace App\Helper;
 
 use App\Entity\Outcome;
 use App\Entity\User;
+use phpDocumentor\Reflection\Types\Integer;
 
 class BetHelper
 {
@@ -54,5 +55,20 @@ class BetHelper
         }
 
         return $users;
+    }
+
+    /**
+     * @param Outcome $outcome
+     * @return int
+     */
+    public static function getTotalBetsAmount(Outcome $outcome): Integer
+    {
+        $amount = 0;
+
+        foreach ($outcome->getBets() as $bet) {
+            $amount += $bet->getAmount();
+        }
+
+        return $amount;
     }
 }
