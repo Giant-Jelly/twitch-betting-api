@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/api/betting", name="ApiBetting")
+ * @Route("/api/betting", name="ApiBetting", methods={"GET", "OPTIONS"})
  *
  * Class BetController
  * @package App\Controller

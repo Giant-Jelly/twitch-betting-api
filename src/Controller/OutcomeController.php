@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/api/outcome", name="ApiOutcome")
+ * @Route("/api/outcome", name="ApiOutcome", methods={"GET", "OPTIONS"})
  *
  * Class OutcomeController
  * @package App\Controller

@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/api/user", name="ApiUser")
+ * @Route("/api/user", name="ApiUser", methods={"GET", "OPTIONS"})
  *
  * Class UserController
  * @package App\Controller
