@@ -121,7 +121,7 @@ class OutcomeController extends BaseController
             $entries[] = [
                 'id' => $outcome->getId(),
                 'name' => $outcome->getName(),
-                'payout' => $outcome->getPayout(),
+                'odds' => number_format($outcome->getPayout(), 2),
                 'totalBets' => BetHelper::getTotalBetsAmount($outcome)
             ];
         }
