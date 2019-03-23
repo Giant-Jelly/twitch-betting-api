@@ -61,7 +61,7 @@ class BetHelper
      * @param Outcome $outcome
      * @return int
      */
-    public static function getTotalBetsAmount(Outcome $outcome): Integer
+    public static function getTotalBetsAmount(Outcome $outcome): int
     {
         $amount = 0;
 
