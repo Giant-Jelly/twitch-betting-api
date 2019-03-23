@@ -12,8 +12,12 @@ class RequestHelper
      */
     public static function getUsernameFromRequest(Request $request): string
     {
-        parse_str($request->headers->get('Nightbot-User'), $headerData);
-        return $headerData['name'];
+        if ($request->headers->get('Nightbot-User')) {
+            parse_str($request->headers->get('Nightbot-User'), $headerData);
+            return $headerData['name'];
+        } else {
+            return $request->get('userId');
+        }
     }
 
     /**
@@ -22,7 +26,11 @@ class RequestHelper
      */
     public static function getDisplayNameFromRequest(Request $request): string
     {
-        parse_str($request->headers->get('Nightbot-User'), $headerData);
-        return $headerData['displayName'];
+        if ($request->headers->get('Nightbot-User')) {
+            parse_str($request->headers->get('Nightbot-User'), $headerData);
+            return $headerData['displayName'];
+        } else {
+            return $request->get('username');
+        }
     }
 }
