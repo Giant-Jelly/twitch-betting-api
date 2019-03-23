@@ -26,6 +26,7 @@ class BetHelper
         foreach ($bets as $bet) {
             $user = $bet->getUser();
             self::adjustCredits($user, self::calculateWinnings($outcome->getPayout(), $bet->getAmount()));
+            $bet->setWinnings(self::calculateWinnings($outcome->getPayout(), $bet->getAmount()));
         }
     }
 

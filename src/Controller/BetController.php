@@ -111,6 +111,7 @@ class BetController extends BaseController
      *
      * @param Request $request
      * @param RoundRepository $roundRepository
+     * @param BetRepository $betRepository
      * @return Response
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
