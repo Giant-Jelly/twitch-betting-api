@@ -10,6 +10,8 @@ use App\Exception\MessageException;
 use App\Helper\BetHelper;
 use App\Helper\RequestHelper;
 use App\Helper\ResponseHelper;
+use App\Repository\BetRepository;
+use App\Repository\RoundRepository;
 use App\Response\ApiResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -75,6 +77,31 @@ class BetController extends BaseController
         $response = [
             'message' => 'You bet ' . $bet->getAmount() . ' on ' . $outcome->getName()
         ];
+        return ResponseHelper::getApiResponse($request, $response);
+    }
+
+    /**
+     * @Route("/list", name="List", methods={"GET"})
+     *
+     * @param Request $request
+     * @param BetRepository $betRepository
+     * @param RoundRepository $roundRepository
+     * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function list(Request $request, BetRepository $betRepository, RoundRepository $roundRepository): Response
+    {
+        /** @var Bet[] $bets */
+        $bets = $betRepository->findAllByRound($roundRepository->getLatestOngoingRound());
+
+        $response = [];
+        foreach ($bets as $bet) {
+            $response[] = [
+                'user' => $bet->getUser()->getDisplayName(),
+                'amount' => $bet->getAmount(),
+            ];
+        }
+
         return ResponseHelper::getApiResponse($request, $response);
     }
 }

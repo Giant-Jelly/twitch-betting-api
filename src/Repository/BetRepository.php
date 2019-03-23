@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Bet;
+use App\Entity\Round;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -17,6 +18,19 @@ class BetRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Bet::class);
+    }
+
+    /**
+     * @param Round $round
+     * @return array|null
+     */
+    public function findAllByRound(Round $round): ?array
+    {
+        return $this->createQueryBuilder('b')
+            ->leftJoin('b.outcome', 'o')
+            ->andWhere('o.round = :round')
+            ->setParameter('round', $round)
+            ->getQuery()->getResult();
     }
 
     // /**
