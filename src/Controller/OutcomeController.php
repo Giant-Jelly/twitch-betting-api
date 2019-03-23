@@ -112,14 +112,21 @@ class OutcomeController extends BaseController
             return ResponseHelper::getApiResponse($request, $response);
         }
 
-        $entries = '';
+        $message = '';
+        $outcomes = [];
 
         foreach ($outcomes as $outcome) {
-            $entries .= '| '.$outcome->getChoice() . '. ' . $outcome->getName() .' |';
+            $message .= '| '.$outcome->getChoice() . '. ' . $outcome->getName() .' |';
+            $outcomes[] = [
+                'id' => $outcome->getId(),
+                'name' => $outcome->getName(),
+                'payout' => $outcome->getPayout()
+            ];
         }
 
         $response = [
-            'message' => $entries
+            'outcomes' => $outcomes,
+            'message' => $message
         ];
         return ResponseHelper::getApiResponse($request, $response);
     }
