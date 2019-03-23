@@ -113,11 +113,11 @@ class OutcomeController extends BaseController
         }
 
         $message = '';
-        $outcomes = [];
+        $entries = [];
 
         foreach ($outcomes as $outcome) {
             $message .= '| '.$outcome->getChoice() . '. ' . $outcome->getName() .' |';
-            $outcomes[] = [
+            $entries[] = [
                 'id' => $outcome->getId(),
                 'name' => $outcome->getName(),
                 'payout' => $outcome->getPayout()
@@ -125,7 +125,7 @@ class OutcomeController extends BaseController
         }
 
         $response = [
-            'outcomes' => $outcomes,
+            'outcomes' => $entries,
             'message' => $message
         ];
         return ResponseHelper::getApiResponse($request, $response);
