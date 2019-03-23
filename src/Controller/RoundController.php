@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/api/round", name="ApiRound")
+ * @Route("/api/round", name="ApiRound", methods={"GET", "OPTIONS"})
  *
  * Class RoundController
  * @package App\Controller
