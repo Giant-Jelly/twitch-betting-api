@@ -99,7 +99,7 @@ class BetController extends BaseController
             $response['bets'][] = [
                 'user' => $bet->getUser()->getDisplayName(),
                 'amount' => $bet->getAmount(),
-                'outcome' => $bet->getOutcome()
+                'outcome' => $bet->getOutcome()->getId()
             ];
         }
 
