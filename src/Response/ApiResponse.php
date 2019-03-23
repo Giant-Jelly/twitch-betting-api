@@ -15,7 +15,7 @@ class ApiResponse extends Response
     {
         $headers = [
             'Access-Control-Allow-Origin' => '*',
-            'Access-Control-Allow-Methods' => 'GET,POST,PUT,DELETE',
+            'Access-Control-Allow-Methods' => 'GET,POST,PUT,DELETE,OPTIONS',
             'Access-Control-Allow-Headers' => 'authorization, content-type, x-json'
         ];
         parent::__construct($content, $code, $headers);

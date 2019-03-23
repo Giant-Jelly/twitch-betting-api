@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 class JsonApiResponse extends JsonResponse
 {
     /**
-     * ApiResponse constructor.
+     * JsonApiResponse constructor.
      * @param array $content
      * @param int $code
      */
@@ -16,7 +16,7 @@ class JsonApiResponse extends JsonResponse
     {
         $headers = [
             'Access-Control-Allow-Origin' => '*',
-            'Access-Control-Allow-Methods' => 'GET,POST,PUT,DELETE',
+            'Access-Control-Allow-Methods' => 'GET,POST,PUT,DELETE,OPTIONS',
             'Access-Control-Allow-Headers' => 'authorization, content-type, x-json'
         ];
         parent::__construct($content, $code, $headers);
