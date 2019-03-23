@@ -33,6 +33,11 @@ class Bet
      */
     private $amount;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $winnings;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -91,6 +96,18 @@ class Bet
     public function setAmount(int $amount): self
     {
         $this->amount = $amount;
+
+        return $this;
+    }
+
+    public function getWinnings(): ?int
+    {
+        return $this->winnings;
+    }
+
+    public function setWinnings(?int $winnings): self
+    {
+        $this->winnings = $winnings;
 
         return $this;
     }

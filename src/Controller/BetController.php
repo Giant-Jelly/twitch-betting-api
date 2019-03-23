@@ -105,4 +105,40 @@ class BetController extends BaseController
 
         return ResponseHelper::getApiResponse($request, $response);
     }
+
+    /**
+     * @Route("/last-bets", name="LastBets", methods={"GET"})
+     *
+     * @param Request $request
+     * @param RoundRepository $roundRepository
+     * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function lastBets(Request $request, RoundRepository $roundRepository, BetRepository $betRepository): Response
+    {
+        $round = $roundRepository->getLatest(1);
+        /** @var Bet[] $bets */
+        $bets = $betRepository->findAllByRound($round);
+
+        $entries = [];
+        foreach ($bets as $bet) {
+            if ($bet->getOutcome()->getWon()) {
+                $entries['winners'] = [
+                    'user' => $bet->getUser()->getDisplayName(),
+                    'amount' => $bet->getWinnings(),
+                ];
+            } else {
+                $entries['losers'] = [
+                    'user' => $bet->getUser()->getDisplayName(),
+                    'amount' => $bet->getAmount()
+                ];
+            }
+        }
+
+        $response = [
+            $entries
+        ];
+
+        return ResponseHelper::getApiResponse($request, $response);
+    }
 }
