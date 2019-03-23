@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Outcome;
 use App\Exception\MessageException;
+use App\Helper\ResponseHelper;
 use App\Repository\OutcomeRepository;
 use App\Repository\RoundRepository;
 use App\Response\ApiResponse;
@@ -25,10 +26,10 @@ class OutcomeController extends BaseController
      * @param Request $request
      * @param RoundRepository $roundRepo
      * @param OutcomeRepository $outcomeRepo
-     * @return ApiResponse
+     * @return Response
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function newOutcome(Request $request, RoundRepository $roundRepo, OutcomeRepository $outcomeRepo): ApiResponse
+    public function newOutcome(Request $request, RoundRepository $roundRepo, OutcomeRepository $outcomeRepo): Response
     {
         $round = $roundRepo->getLatest();
 
@@ -42,7 +43,10 @@ class OutcomeController extends BaseController
         $em->persist($outcome);
         $em->flush();
 
-        return new ApiResponse('Outcome ' . $outcome->getName() . ' created');
+        $response = [
+            'message' => 'Outcome ' . $outcome->getName() . ' created'
+        ];
+        return ResponseHelper::getApiResponse($request, $response);
     }
 
     /**
@@ -60,7 +64,10 @@ class OutcomeController extends BaseController
         $latestRound = $roundRepo->getLatestOngoingRound();
 
         if (!$latestRound) {
-            return new ApiResponse('No current ongoing round');
+            $response = [
+                'message' => 'No current ongoing round'
+            ];
+            return ResponseHelper::getApiResponse($request, $response);
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -77,33 +84,43 @@ class OutcomeController extends BaseController
 
         $em->flush();
 
-        return new ApiResponse('Outcomes have been repeated from ' . $round->getName());
+        $response = [
+            'message' => 'Outcomes have been repeated from ' . $round->getName()
+        ];
+        return ResponseHelper::getApiResponse($request, $response);
     }
 
     /**
      * @Route("/list", name="List", methods={"GET"})
      *
+     * @param Request $request
      * @param OutcomeRepository $outcomeRepository
      * @param RoundRepository $roundRepository
      * @return Response
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function listOutcomes(OutcomeRepository $outcomeRepository, RoundRepository $roundRepository): Response
+    public function listOutcomes(Request $request, OutcomeRepository $outcomeRepository, RoundRepository $roundRepository): Response
     {
         $round = $roundRepository->getLatestOngoingRound();
         /** @var Outcome[] $outcomes */
         $outcomes = $outcomeRepository->findBy(['round' => $round], ['choice' => 'ASC']);
 
         if (count($outcomes) < 1) {
-            return new ApiResponse('There are no outcomes currently');
+            $response = [
+                'message' => 'There are no outcomes currently'
+            ];
+            return new ApiResponse();
         }
 
-        $response = '';
+        $entries = '';
 
         foreach ($outcomes as $outcome) {
-            $response .= '| '.$outcome->getChoice() . '. ' . $outcome->getName() .' |';
+            $entries .= '| '.$outcome->getChoice() . '. ' . $outcome->getName() .' |';
         }
 
-        return new ApiResponse($response);
+        $response = [
+            'message' => $entries
+        ];
+        return ResponseHelper::getApiResponse($request, $response);
     }
 }

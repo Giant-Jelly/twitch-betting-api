@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Helper\BetHelper;
 use App\Helper\RequestHelper;
+use App\Helper\ResponseHelper;
 use App\Repository\UserRepository;
 use App\Response\ApiResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,7 +35,10 @@ class UserController extends BaseController
         ]);
 
         if ($user) {
-            return new ApiResponse($user->getDisplayName() . ' has already registered for betting. Use !betting for more instructions');
+            $response = [
+                'message' => $user->getDisplayName() . ' has already registered for betting. Use !betting for more instructions'
+            ];
+            return ResponseHelper::getApiResponse($request, $response);
         }
 
         $user = (new User())
@@ -46,7 +50,10 @@ class UserController extends BaseController
         $em->persist($user);
         $em->flush();
 
-        return new ApiResponse($user->getDisplayName() . ' has registered for betting and been awarded ' . User::STARTING_CREDITS . ' credits. Use !betting to find out how to bet.');
+        $response = [
+            'message' => $user->getDisplayName() . ' has registered for betting and been awarded ' . User::STARTING_CREDITS . ' credits. Use !betting to find out how to bet.'
+        ];
+        return ResponseHelper::getApiResponse($request, $response);
     }
 
     /**
@@ -61,18 +68,27 @@ class UserController extends BaseController
         $user = $repo->findOneBy(['username' => RequestHelper::getUsernameFromRequest($request)]);
 
         if (!$user) {
-            return new ApiResponse('Your user isn\'t registered to bet. Run !register first');
+            $response = [
+                'message' => 'Your user isn\'t registered to bet. Run !register first'
+            ];
+            return ResponseHelper::getApiResponse($request, $response);
         }
 
         if ($user->getCreditRedemptionDate()->format('Y-m-d') >= (new \DateTime())->format('Y-m-d')) {
-            return new ApiResponse('You have already redeemed your free credits today. Come back tomorrow');
+            $response = [
+                'message' => 'You have already redeemed your free credits today. Come back tomorrow'
+            ];
+            return ResponseHelper::getApiResponse($request, $response);
         }
 
         BetHelper::adjustCredits($user, User::REDEEMABLE_CREDIT_AMOUNT);
         $user->setCreditRedemptionDate((new \DateTime()));
         $this->getDoctrine()->getManager()->flush();
 
-        return new ApiResponse('You have redeemed your daily credits. ' . User::REDEEMABLE_CREDIT_AMOUNT . ' credits have been added to your account');
+        $response = [
+            'message' => 'You have redeemed your daily credits. ' . User::REDEEMABLE_CREDIT_AMOUNT . ' credits have been added to your account'
+        ];
+        return ResponseHelper::getApiResponse($request, $response);
     }
 
     /**
@@ -86,12 +102,15 @@ class UserController extends BaseController
     {
         $users = $userRepository->findBy([], ['credits' => 'DESC'], 5);
 
-        $response = '';
+        $entries = '';
         foreach ($users as $key => $user) {
-            $response .= $key + 1 . '. ' . $user->getDisplayName() . ' - ' . $user->getCredits() . ' | ';
+            $entries .= $key + 1 . '. ' . $user->getDisplayName() . ' - ' . $user->getCredits() . ' | ';
         };
 
-        return new ApiResponse($response);
+        $response = [
+            'message' => $entries
+        ];
+        return ResponseHelper::getApiResponse($request, $response);
     }
 
     /**
@@ -106,7 +125,10 @@ class UserController extends BaseController
             'username' => RequestHelper::getUsernameFromRequest($request)
         ]);
 
-        return new ApiResponse('You have ' . $user->getCredits() . ' credits');
+        $response = [
+            'message' => 'You have ' . $user->getCredits() . ' credits'
+        ];
+        return ResponseHelper::getApiResponse($request, $response);
     }
 
     /**
@@ -122,12 +144,18 @@ class UserController extends BaseController
         ]);
 
         if ($user->getCredits() < self::REQUEST_PRICE) {
-            return new ApiResponse('You do not have enough credits to make a request. You have ' . $user->getCredits() . '. You need ' . self::REQUEST_PRICE);
+            $response = [
+                'message' => 'You do not have enough credits to make a request. You have ' . $user->getCredits() . '. You need ' . self::REQUEST_PRICE
+            ];
+            return ResponseHelper::getApiResponse($request, $response);
         }
 
         BetHelper::adjustCredits($user, -self::REQUEST_PRICE);
         $this->getDoctrine()->getManager()->flush();
 
-        return new ApiResponse($user->getDisplayName() . ' has spent their credits on a request @GiantJelly. (Matt and Nathan will fulfill your request in a moment.)');
+        $response = [
+            'message' => $user->getDisplayName() . ' has spent their credits on a request @GiantJelly. (Matt and Nathan will fulfill your request in a moment.)'
+        ];
+        return ResponseHelper::getApiResponse($request, $response);
     }
 }

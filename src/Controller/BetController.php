@@ -9,6 +9,7 @@ use App\Entity\User;
 use App\Exception\MessageException;
 use App\Helper\BetHelper;
 use App\Helper\RequestHelper;
+use App\Helper\ResponseHelper;
 use App\Response\ApiResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,10 +27,10 @@ class BetController extends BaseController
      * @Route("/bet", name="Bet", methods={"GET"})
      *
      * @param Request $request
-     * @return ApiResponse
+     * @return Response
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function bet(Request $request): ApiResponse
+    public function bet(Request $request): Response
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -37,19 +38,28 @@ class BetController extends BaseController
         $user = $em->getRepository(User::class)->findOneBy(['username' => RequestHelper::getUsernameFromRequest($request)]);
 
         if (!$user) {
-            return new ApiResponse('Your user isn\'t registered to bet. Run !register first');
+            $response = [
+                'message' => 'Your user isn\'t registered to bet. Run !register first'
+            ];
+            return ResponseHelper::getApiResponse($request, $response);
         }
 
         $round = $em->getRepository(Round::class)->getLatestOngoingRound();
 
         if (!$round->getOpen()) {
-            return new ApiResponse('Betting is currently closed. Wait until the next round');
+            $response = [
+                'message' => 'Betting is currently closed. Wait until the next round'
+            ];
+            return ResponseHelper::getApiResponse($request, $response);
         }
 
         $outcome = $em->getRepository(Outcome::class)->findOneBy(['round' => $round, 'choice' => $request->get('outcome')]);
 
         if (!$outcome) {
-            return new ApiResponse('That outcome doesn\'t exist');
+            $response = [
+                'message' => 'That outcome doesn\'t exist'
+            ];
+            return ResponseHelper::getApiResponse($request, $response);
         }
 
         $bet = (new Bet())
@@ -61,6 +71,10 @@ class BetController extends BaseController
         BetHelper::adjustCredits($user, -$request->get('amount'));
         $em->flush();
 
-        return new ApiResponse('You bet ' . $bet->getAmount() . ' on ' . $outcome->getName());
+
+        $response = [
+            'message' => 'You bet ' . $bet->getAmount() . ' on ' . $outcome->getName()
+        ];
+        return ResponseHelper::getApiResponse($request, $response);
     }
 }

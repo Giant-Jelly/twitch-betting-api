@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Helper\RequestHelper;
+use App\Helper\ResponseHelper;
 use App\Response\ApiResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,10 +22,13 @@ class BaseController extends AbstractController
      * @Route("/test", name="Test", methods={"GET"})
      *
      * @param Request $request
-     * @return ApiResponse
+     * @return Response
      */
-    public function test(Request $request): ApiResponse
+    public function test(Request $request): Response
     {
-        return new ApiResponse(print_r($request->headers));
+        $response = [
+            'message' => print_r($request->headers)
+        ];
+        return ResponseHelper::getApiResponse($request, $response);
     }
 }

@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Round;
 use App\Helper\BetHelper;
+use App\Helper\ResponseHelper;
+use App\Helper\RoundHelper;
 use App\Repository\OutcomeRepository;
 use App\Repository\RoundRepository;
 use App\Response\ApiResponse;
@@ -34,7 +36,10 @@ class RoundController extends BaseController
         $em->persist($round);
         $em->flush();
 
-        return new ApiResponse('New betting "' . $round->getName() . '" round created');
+        $response = [
+            'message' => 'New betting "' . $round->getName() . '" round created'
+        ];
+        return ResponseHelper::getApiResponse($request, $response);
     }
 
     /**
@@ -43,16 +48,19 @@ class RoundController extends BaseController
      * @param Request $request
      * @param RoundRepository $repo
      * @param OutcomeRepository $outcomeRepository
-     * @return ApiResponse
+     * @return Response
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function endRound(Request $request, RoundRepository $repo, OutcomeRepository $outcomeRepository): ApiResponse
+    public function endRound(Request $request, RoundRepository $repo, OutcomeRepository $outcomeRepository): Response
     {
         /** @var Round $round */
         $round = $repo->getLatestOngoingRound();
 
         if (!$round) {
-            return new ApiResponse('There are no currently ongoing rounds');
+            $response = [
+                'message' => 'There are no currently ongoing rounds'
+            ];
+            return ResponseHelper::getApiResponse($request, $response);
         }
 
         $round->setFinished(true);
@@ -66,38 +74,68 @@ class RoundController extends BaseController
 
         $winners = BetHelper::getWinners($outcome);
 
-        return new ApiResponse('Round "' . $round->getName() . '" ended. ' . $outcome->getName() . ' won! Winners: ' . implode(' | ', $winners));
+        $response = [
+            'message' => 'Round "' . $round->getName() . '" ended. ' . $outcome->getName() . ' won! Winners: ' . implode(' | ', $winners)
+        ];
+        return ResponseHelper::getApiResponse($request, $response);
     }
 
     /**
      * @Route("/open", name="Open", methods={"GET"})
      *
+     * @param Request $request
      * @param RoundRepository $roundRepository
      * @return Response
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function openBetting(RoundRepository $roundRepository): Response
+    public function openBetting(Request $request, RoundRepository $roundRepository): Response
     {
         $round = $roundRepository->getLatestOngoingRound();
         $round->setOpen(true);
         $this->getDoctrine()->getManager()->flush();
 
-        return new ApiResponse('Betting round OPEN! Start betting with with !bet');
+        $response = [
+            'message' => 'Betting round OPEN! Start betting with with !bet'
+        ];
+        return ResponseHelper::getApiResponse($request, $response);
     }
 
     /**
      * @Route("/close", name="Close", methods={"GET"})
      *
+     * @param Request $request
      * @param RoundRepository $roundRepository
      * @return Response
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function closeBetting(RoundRepository $roundRepository): Response
+    public function closeBetting(Request $request, RoundRepository $roundRepository): Response
     {
         $round = $roundRepository->getLatestOngoingRound();
         $round->setOpen(false);
         $this->getDoctrine()->getManager()->flush();
 
-        return new ApiResponse('Betting round CLOSED!');
+        $response = [
+            'message' => 'Betting round CLOSED!'
+        ];
+        return ResponseHelper::getApiResponse($request, $response);
+    }
+
+    /**
+     * @Route("/status", name="Status", methods={"GET"})
+     *
+     * @param Request $request
+     * @param RoundRepository $roundRepository
+     * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function roundStatus(Request $request, RoundRepository $roundRepository): Response
+    {
+        $status = RoundHelper::getRoundStatus($roundRepository->getLatest());
+
+        $response = [
+            'status' => $status,
+            'message' => $status
+        ];
+        return ResponseHelper::getApiResponse($request, $response);
     }
 }
