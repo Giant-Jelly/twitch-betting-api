@@ -109,7 +109,7 @@ class OutcomeController extends BaseController
             $response = [
                 'message' => 'There are no outcomes currently'
             ];
-            return new ApiResponse();
+            return ResponseHelper::getApiResponse($request, $response);
         }
 
         $entries = '';

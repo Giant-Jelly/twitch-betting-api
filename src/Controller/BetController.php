@@ -96,7 +96,7 @@ class BetController extends BaseController
 
         $response = [];
         foreach ($bets as $bet) {
-            $response[] = [
+            $response['bets'] = [
                 'user' => $bet->getUser()->getDisplayName(),
                 'amount' => $bet->getAmount(),
             ];
