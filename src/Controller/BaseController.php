@@ -25,6 +25,6 @@ class BaseController extends AbstractController
      */
     public function test(Request $request): ApiResponse
     {
-        return new ApiResponse('outcome: ' . $request->get('outcome'));
+        return new ApiResponse(print_r($request->headers));
     }
 }
