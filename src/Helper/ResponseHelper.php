@@ -20,7 +20,7 @@ class ResponseHelper
             return new ApiResponse('');
         }
 
-        if ($request->headers->get('gj-json')) {
+        if ($request->headers->get('x-json')) {
             return new JsonApiResponse($content);
         } else {
             return new ApiResponse($content['message']);
