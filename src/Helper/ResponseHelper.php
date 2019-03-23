@@ -16,6 +16,10 @@ class ResponseHelper
      */
     public static function getApiResponse(Request $request, array $content): Response
     {
+        if ($request->getMethod() == 'OPTIONS') {
+            return new ApiResponse('');
+        }
+
         if ($request->headers->get('x-json')) {
             return new JsonApiResponse($content);
         } else {

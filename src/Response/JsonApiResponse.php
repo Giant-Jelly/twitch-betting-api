@@ -3,7 +3,6 @@
 namespace App\Response;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class JsonApiResponse extends JsonResponse
 {
