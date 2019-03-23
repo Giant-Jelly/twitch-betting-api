@@ -16,7 +16,7 @@ class JsonApiResponse extends JsonResponse
         $headers = [
             'Access-Control-Allow-Origin' => '*',
             'Access-Control-Allow-Methods' => 'GET,POST,PUT,DELETE,OPTIONS',
-            'Access-Control-Allow-Headers' => 'authorization,content-type,x-json'
+            'Access-Control-Allow-Headers' => 'authorization,content-type,gj-json'
         ];
         parent::__construct($content, $code, $headers);
     }
