@@ -70,6 +70,13 @@ class ShopController extends BaseController
             'username' => RequestHelper::getUsernameFromRequest($request)
         ]);
 
+        if ($user->getFlair() && $user->getFlair()->getId() == $item->getId()) {
+            $response = [
+                'message' => 'You already have that flair.'
+            ];
+            return ResponseHelper::getApiResponse($request, $response);
+        }
+
         $user->setFlair($item);
         BetHelper::adjustCredits($user, -$item->getPrice());
         $this->getDoctrine()->getManager()->flush();
