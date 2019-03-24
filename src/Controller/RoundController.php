@@ -191,7 +191,7 @@ class RoundController extends BaseController
         $em->flush();
 
         $response = [
-            'message' => 'Round ' . $round->getName() . ' has been repeated. Betting is OPEN!'
+            'message' => 'Round ' . $round->getName() . ' has been repeated. Betting is OPEN! Start betting with !bet'
         ];
         return ResponseHelper::getApiResponse($request, $response);
     }
