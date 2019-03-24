@@ -29,13 +29,22 @@ class RoundController extends BaseController
      *
      * @param Request $request
      * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function newRound(Request $request): Response
     {
+        $em = $this->getDoctrine()->getManager();
+        $currentRound = $em->getRepository(Round::class)->getLatestOngoingRound();
+        if ($currentRound) {
+            $response = [
+                'message' => 'Cannot create round while there is an active round'
+            ];
+            return ResponseHelper::getApiResponse($request, $response);
+        }
+
         $round = (new Round)
             ->setName($request->get('name'));
 
-        $em = $this->getDoctrine()->getManager();
         $em->persist($round);
         $em->flush();
 
@@ -149,7 +158,6 @@ class RoundController extends BaseController
      * @param EntityManagerInterface $em
      * @return Response
      * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function repeatRound(Request $request, EntityManagerInterface $em): Response
     {
@@ -167,6 +175,7 @@ class RoundController extends BaseController
             ->setName($round->getName())
             ->setOpen(true)
             ->setFinished(false);
+        $em->persist($newRound);
 
         foreach ($round->getOutcomes() as $outcome) {
             $o = (new Outcome())
