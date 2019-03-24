@@ -40,8 +40,13 @@ class OutcomeController extends BaseController
             ->setPayout($request->get('payout', 0.5))
             ->setRound($round)
             ->setChoice($outcomeRepo->count(['round' => $round]) + 1)
-            ->setColour(OutcomeHelper::getOutcomeColour($round))
-        ;
+            ->setColour(OutcomeHelper::getOutcomeColour($round));
+
+        if (strtolower($outcome->getName()) == 'nathan') {
+            $outcome->setColour('#ff8330');
+        } elseif (strtolower($outcome->getName()) == 'matt') {
+            $outcome->setColour('#82d757');
+        }
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($outcome);
@@ -82,8 +87,7 @@ class OutcomeController extends BaseController
                 ->setName($outcome->getName())
                 ->setPayout($outcome->getPayout())
                 ->setRound($latestRound)
-                ->setColour($outcome->getColour())
-            ;
+                ->setColour($outcome->getColour());
 
             $em->persist($o);
         }
@@ -123,7 +127,7 @@ class OutcomeController extends BaseController
         $entries = [];
 
         foreach ($outcomes as $outcome) {
-            $message .= '| '.$outcome->getChoice() . '. ' . $outcome->getName() .' - |';
+            $message .= '| ' . $outcome->getChoice() . '. ' . $outcome->getName() . ' - |';
             $entries[] = [
                 'id' => $outcome->getId(),
                 'name' => $outcome->getName(),
