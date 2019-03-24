@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Outcome;
 use App\Entity\Round;
 use App\Helper\BetHelper;
 use App\Helper\ResponseHelper;
@@ -9,6 +10,7 @@ use App\Helper\RoundHelper;
 use App\Repository\OutcomeRepository;
 use App\Repository\RoundRepository;
 use App\Response\ApiResponse;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -135,6 +137,51 @@ class RoundController extends BaseController
         $response = [
             'status' => $status,
             'message' => $status
+        ];
+        return ResponseHelper::getApiResponse($request, $response);
+    }
+
+    /**
+     * @Route("/repeat", name="Repeat", methods={"GET"})
+     *
+     * @param Request $request
+     * @param EntityManager $em
+     * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function repeatRound(Request $request, EntityManager $em): Response
+    {
+        $currentRound = $em->getRepository(Round::class)->getLatestOngoingRound();
+
+        if ($currentRound) {
+            $response = [
+                'message' => 'Cannot repeat round while there is an active round'
+            ];
+            return ResponseHelper::getApiResponse($request, $response);
+        }
+        $round = $em->getRepository(Round::class)->getLatest();
+
+        $newRound = (new Round())
+            ->setName($round->getName())
+            ->setOpen(true)
+            ->setFinished(false);
+
+        foreach ($round->getOutcomes() as $outcome) {
+            $o = (new Outcome())
+                ->setChoice($outcome->getChoice())
+                ->setName($outcome->getName())
+                ->setPayout($outcome->getPayout())
+                ->setRound($newRound)
+                ->setColour($outcome->getColour());
+
+            $em->persist($o);
+        }
+
+        $em->flush();
+
+        $response = [
+            'message' => 'Round ' . $round->getName() . ' has been repeated'
         ];
         return ResponseHelper::getApiResponse($request, $response);
     }
