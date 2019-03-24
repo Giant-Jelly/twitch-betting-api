@@ -107,7 +107,7 @@ class RoundController extends BaseController
         $this->getDoctrine()->getManager()->flush();
 
         $response = [
-            'message' => 'Betting round OPEN! Start betting with with !bet'
+            'message' => 'Betting round OPEN! Start betting with with "!bet [outcome] [credits]"'
         ];
         return ResponseHelper::getApiResponse($request, $response);
     }
@@ -191,7 +191,7 @@ class RoundController extends BaseController
         $em->flush();
 
         $response = [
-            'message' => 'Round ' . $round->getName() . ' has been repeated. Betting is OPEN! Start betting with !bet'
+            'message' => 'Round ' . $round->getName() . ' has been repeated. Betting is OPEN! Start betting with "!bet [outcome] [credits]"'
         ];
         return ResponseHelper::getApiResponse($request, $response);
     }
