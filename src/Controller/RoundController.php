@@ -11,6 +11,7 @@ use App\Repository\OutcomeRepository;
 use App\Repository\RoundRepository;
 use App\Response\ApiResponse;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -145,12 +146,12 @@ class RoundController extends BaseController
      * @Route("/repeat", name="Repeat", methods={"GET"})
      *
      * @param Request $request
-     * @param EntityManager $em
+     * @param EntityManagerInterface $em
      * @return Response
-     * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function repeatRound(Request $request, EntityManager $em): Response
+    public function repeatRound(Request $request, EntityManagerInterface $em): Response
     {
         $currentRound = $em->getRepository(Round::class)->getLatestOngoingRound();
 
