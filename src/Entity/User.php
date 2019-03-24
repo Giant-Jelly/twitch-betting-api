@@ -51,6 +51,11 @@ class User
      */
     private $flair;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Badge", inversedBy="user")
+     */
+    private $badge;
+
     public function __construct()
     {
         $this->creditRedemptionDate = new \DateTime();
@@ -181,6 +186,18 @@ class User
     public function setFlair(?ShopItem $flair): self
     {
         $this->flair = $flair;
+
+        return $this;
+    }
+
+    public function getBadge(): ?Badge
+    {
+        return $this->badge;
+    }
+
+    public function setBadge(?Badge $badge): self
+    {
+        $this->badge = $badge;
 
         return $this;
     }

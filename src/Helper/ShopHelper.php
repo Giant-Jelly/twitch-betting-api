@@ -22,4 +22,20 @@ class ShopHelper
         }
         return [];
     }
+
+    /**
+     * @param User $user
+     * @return array
+     */
+    public static function getBadge(User $user): array
+    {
+        $badge = $user->getBadge();
+        if ($badge) {
+            $response = [
+                'asset' => $badge->getAsset(),
+            ];
+            return $response;
+        }
+        return [];
+    }
 }

@@ -100,6 +100,7 @@ class BetController extends BaseController
             $response[] = [
                 'user' => $bet->getUser()->getDisplayName(),
                 'flair' => ShopHelper::getFlare($bet->getUser()),
+                'badge' => ShopHelper::getBadge($bet->getUser()),
                 'amount' => $bet->getAmount(),
                 'outcome' => $bet->getOutcome()->getId()
             ];
@@ -134,12 +135,14 @@ class BetController extends BaseController
                 $winners[] = [
                     'user' => $bet->getUser()->getDisplayName(),
                     'flair' => ShopHelper::getFlare($bet->getUser()),
+                    'badge' => ShopHelper::getBadge($bet->getUser()),
                     'amount' => $bet->getWinnings(),
                 ];
             } else {
                 $losers[] = [
                     'user' => $bet->getUser()->getDisplayName(),
                     'flair' => ShopHelper::getFlare($bet->getUser()),
+                    'badge' => ShopHelper::getBadge($bet->getUser()),
                     'amount' => $bet->getAmount()
                 ];
             }

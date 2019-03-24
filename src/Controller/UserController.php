@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Helper\BetHelper;
 use App\Helper\RequestHelper;
 use App\Helper\ResponseHelper;
+use App\Helper\ShopHelper;
 use App\Repository\UserRepository;
 use App\Response\ApiResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -103,7 +104,13 @@ class UserController extends BaseController
         $users = $userRepository->findBy([], ['credits' => 'DESC'], 10);
 
         $entries = '';
+        $list = [];
         foreach ($users as $key => $user) {
+            $list[] = [
+                'user' => $user->getDisplayName(),
+                'flair' => ShopHelper::getFlare($user),
+                'badge' => ShopHelper::getBadge($user)
+            ];
             $entries .= $key + 1 . '. ' . $user->getDisplayName() . ' - ' . $user->getCredits() . ' | ';
         };
 
