@@ -46,6 +46,11 @@ class User
      */
     private $creditRedemptionDate;
 
+    /**
+     * @ORM\Column(type="string", length=10000, nullable=true)
+     */
+    private $flair;
+
 
     public function __construct()
     {
@@ -165,6 +170,18 @@ class User
     public function setCreditRedemptionDate(\DateTimeInterface $creditRedemptionDate): self
     {
         $this->creditRedemptionDate = $creditRedemptionDate;
+
+        return $this;
+    }
+
+    public function getFlair(): ?string
+    {
+        return $this->flair;
+    }
+
+    public function setFlair(?string $flair): self
+    {
+        $this->flair = $flair;
 
         return $this;
     }
