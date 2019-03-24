@@ -96,12 +96,16 @@ class BetController extends BaseController
 
         $response = [];
         foreach ($bets as $bet) {
-            $response['bets'][] = [
+            $response[] = [
                 'user' => $bet->getUser()->getDisplayName(),
                 'amount' => $bet->getAmount(),
                 'outcome' => $bet->getOutcome()->getId()
             ];
         }
+
+        $response = [
+            'bets' => $response
+        ];
 
         return ResponseHelper::getApiResponse($request, $response);
     }
@@ -121,15 +125,16 @@ class BetController extends BaseController
         /** @var Bet[] $bets */
         $bets = $betRepository->findAllByRound($round);
 
-        $entries = [];
+        $winners = [];
+        $losers = [];
         foreach ($bets as $bet) {
             if ($bet->getOutcome()->getWon()) {
-                $entries['winners'] = [
+                $winners[] = [
                     'user' => $bet->getUser()->getDisplayName(),
                     'amount' => $bet->getWinnings(),
                 ];
             } else {
-                $entries['losers'] = [
+                $losers[] = [
                     'user' => $bet->getUser()->getDisplayName(),
                     'amount' => $bet->getAmount()
                 ];
@@ -137,7 +142,8 @@ class BetController extends BaseController
         }
 
         $response = [
-            $entries
+            'winners' => $winners,
+            'losers' => $losers
         ];
 
         return ResponseHelper::getApiResponse($request, $response);

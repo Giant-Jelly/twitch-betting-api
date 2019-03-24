@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Outcome;
 use App\Exception\MessageException;
 use App\Helper\BetHelper;
+use App\Helper\OutcomeHelper;
 use App\Helper\ResponseHelper;
 use App\Repository\OutcomeRepository;
 use App\Repository\RoundRepository;
@@ -38,7 +39,9 @@ class OutcomeController extends BaseController
             ->setName($request->get('name'))
             ->setPayout($request->get('payout', 0.5))
             ->setRound($round)
-            ->setChoice($outcomeRepo->count(['round' => $round]) + 1);
+            ->setChoice($outcomeRepo->count(['round' => $round]) + 1)
+            ->setColour(OutcomeHelper::getOutcomeColour($round))
+        ;
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($outcome);

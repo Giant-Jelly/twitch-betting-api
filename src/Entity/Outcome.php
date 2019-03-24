@@ -11,6 +11,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Outcome
 {
+    const COLOURS = [
+        '#30acff',
+        '#8330ff',
+        '#ed30ff',
+        '#ff304b',
+        '#30d9ff'
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -48,6 +56,11 @@ class Outcome
      * @ORM\Column(type="integer")
      */
     private $choice;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $colour;
 
     public function __construct()
     {
@@ -192,6 +205,18 @@ class Outcome
     public function setChoice(int $choice): self
     {
         $this->choice = $choice;
+
+        return $this;
+    }
+
+    public function getColour(): ?string
+    {
+        return $this->colour;
+    }
+
+    public function setColour(string $colour): self
+    {
+        $this->colour = $colour;
 
         return $this;
     }
