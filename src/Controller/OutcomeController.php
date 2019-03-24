@@ -81,7 +81,9 @@ class OutcomeController extends BaseController
                 ->setChoice($outcome->getChoice())
                 ->setName($outcome->getName())
                 ->setPayout($outcome->getPayout())
-                ->setRound($latestRound);
+                ->setRound($latestRound)
+                ->setColour($outcome->getColour())
+            ;
 
             $em->persist($o);
         }
