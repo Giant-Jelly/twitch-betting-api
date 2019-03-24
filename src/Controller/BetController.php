@@ -98,6 +98,7 @@ class BetController extends BaseController
         foreach ($bets as $bet) {
             $response[] = [
                 'user' => $bet->getUser()->getDisplayName(),
+                'flair' => $bet->getUser()->getFlair(),
                 'amount' => $bet->getAmount(),
                 'outcome' => $bet->getOutcome()->getId()
             ];
@@ -131,11 +132,13 @@ class BetController extends BaseController
             if ($bet->getOutcome()->getWon()) {
                 $winners[] = [
                     'user' => $bet->getUser()->getDisplayName(),
+                    'flair' => $bet->getUser()->getFlair(),
                     'amount' => $bet->getWinnings(),
                 ];
             } else {
                 $losers[] = [
                     'user' => $bet->getUser()->getDisplayName(),
+                    'flair' => $bet->getUser()->getFlair(),
                     'amount' => $bet->getAmount()
                 ];
             }
