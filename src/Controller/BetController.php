@@ -133,7 +133,7 @@ class BetController extends BaseController
             if ($bet->getOutcome()->getWon()) {
                 $winners[] = [
                     'user' => $bet->getUser()->getDisplayName(),
-                    'flair' => $bet->getUser()->getFlair(),
+                    'flair' => ShopHelper::getFlare($bet->getUser()),
                     'amount' => $bet->getWinnings(),
                 ];
             } else {
