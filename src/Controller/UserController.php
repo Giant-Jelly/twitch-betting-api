@@ -100,7 +100,7 @@ class UserController extends BaseController
      */
     public function leaderboard(Request $request, UserRepository $userRepository): Response
     {
-        $users = $userRepository->findBy([], ['credits' => 'DESC'], 5);
+        $users = $userRepository->findBy([], ['credits' => 'DESC'], 10);
 
         $entries = '';
         foreach ($users as $key => $user) {

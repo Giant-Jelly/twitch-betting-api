@@ -123,7 +123,7 @@ class OutcomeController extends BaseController
         $entries = [];
 
         foreach ($outcomes as $outcome) {
-            $message .= '| '.$outcome->getChoice() . '. ' . $outcome->getName() .' |';
+            $message .= '| '.$outcome->getChoice() . '. ' . $outcome->getName() .' - |';
             $entries[] = [
                 'id' => $outcome->getId(),
                 'name' => $outcome->getName(),
