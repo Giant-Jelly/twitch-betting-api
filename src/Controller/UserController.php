@@ -131,31 +131,31 @@ class UserController extends BaseController
         return ResponseHelper::getApiResponse($request, $response);
     }
 
-    /**
-     * @Route("/request", name="Request", methods={"GET"})
-     *
-     * @param Request $request
-     * @return Response
-     */
-    public function request(Request $request): Response
-    {
-        $user = $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy([
-            'username' => RequestHelper::getUsernameFromRequest($request)
-        ]);
-
-        if ($user->getCredits() < self::REQUEST_PRICE) {
-            $response = [
-                'message' => 'You do not have enough credits to make a request. You have ' . $user->getCredits() . '. You need ' . self::REQUEST_PRICE
-            ];
-            return ResponseHelper::getApiResponse($request, $response);
-        }
-
-        BetHelper::adjustCredits($user, -self::REQUEST_PRICE);
-        $this->getDoctrine()->getManager()->flush();
-
-        $response = [
-            'message' => $user->getDisplayName() . ' has spent their credits on a request @GiantJelly. (Matt and Nathan will fulfill your request in a moment.)'
-        ];
-        return ResponseHelper::getApiResponse($request, $response);
-    }
+//    /**
+//     * @Route("/request", name="Request", methods={"GET"})
+//     *
+//     * @param Request $request
+//     * @return Response
+//     */
+//    public function request(Request $request): Response
+//    {
+//        $user = $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy([
+//            'username' => RequestHelper::getUsernameFromRequest($request)
+//        ]);
+//
+//        if ($user->getCredits() < self::REQUEST_PRICE) {
+//            $response = [
+//                'message' => 'You do not have enough credits to make a request. You have ' . $user->getCredits() . '. You need ' . self::REQUEST_PRICE
+//            ];
+//            return ResponseHelper::getApiResponse($request, $response);
+//        }
+//
+//        BetHelper::adjustCredits($user, -self::REQUEST_PRICE);
+//        $this->getDoctrine()->getManager()->flush();
+//
+//        $response = [
+//            'message' => $user->getDisplayName() . ' has spent their credits on a request @GiantJelly. (Matt and Nathan will fulfill your request in a moment.)'
+//        ];
+//        return ResponseHelper::getApiResponse($request, $response);
+//    }
 }

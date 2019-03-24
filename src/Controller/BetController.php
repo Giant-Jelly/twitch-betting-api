@@ -42,7 +42,7 @@ class BetController extends BaseController
 
         if (!$user) {
             $response = [
-                'message' => 'Your user isn\'t registered to bet. Run !register first'
+                'message' => 'You are not yet registered to bet. Run !register first'
             ];
             return ResponseHelper::getApiResponse($request, $response);
         }
@@ -76,7 +76,7 @@ class BetController extends BaseController
 
 
         $response = [
-            'message' => 'You bet ' . $bet->getAmount() . ' on ' . $outcome->getName()
+            'message' => $user->getDisplayName().' bet ' . $bet->getAmount() . ' on ' . $outcome->getName()
         ];
         return ResponseHelper::getApiResponse($request, $response);
     }
