@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Helper\BetHelper;
+use App\Helper\RequestHelper;
 use App\Helper\ResponseHelper;
 use App\Repository\ShopItemRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * Class ShopController
  * @package App\Controller
  */
-class ShopController
+class ShopController extends BaseController
 {
     /**
      * @Route("/items", name="Items", methods={"GET"})
@@ -41,6 +44,38 @@ class ShopController
 
         $response = [
             'items' => $items
+        ];
+        return ResponseHelper::getApiResponse($request, $response);
+    }
+
+    /**
+     * @Route("/buy", name="Buy", methods={"GET"})
+     *
+     * @param Request $request
+     * @param ShopItemRepository $shopItemRepository
+     * @return Response
+     */
+    public function buy(Request $request, ShopItemRepository $shopItemRepository): Response
+    {
+        $item = $shopItemRepository->find($request->get('item'));
+
+        if (!$item) {
+            $response = [
+                'message' => 'That shop item doesn\'t exist :/'
+            ];
+            return ResponseHelper::getApiResponse($request, $response);
+        }
+
+        $user = $this->getDoctrine()->getManager()->getRepository(User::class)->findOneBy([
+            'username' => RequestHelper::getUsernameFromRequest($request)
+        ]);
+
+        $user->setFlair($item);
+        BetHelper::adjustCredits($user, -$item->getPrice());
+        $this->getDoctrine()->getManager()->flush();
+
+        $response = [
+            'message' => 'Flair updated!'
         ];
         return ResponseHelper::getApiResponse($request, $response);
     }

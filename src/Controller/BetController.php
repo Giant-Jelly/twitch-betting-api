@@ -10,6 +10,7 @@ use App\Exception\MessageException;
 use App\Helper\BetHelper;
 use App\Helper\RequestHelper;
 use App\Helper\ResponseHelper;
+use App\Helper\ShopHelper;
 use App\Repository\BetRepository;
 use App\Repository\RoundRepository;
 use App\Response\ApiResponse;
@@ -98,7 +99,7 @@ class BetController extends BaseController
         foreach ($bets as $bet) {
             $response[] = [
                 'user' => $bet->getUser()->getDisplayName(),
-                'flair' => $bet->getUser()->getFlair(),
+                'flair' => ShopHelper::getFlare($bet->getUser()),
                 'amount' => $bet->getAmount(),
                 'outcome' => $bet->getOutcome()->getId()
             ];
@@ -138,7 +139,7 @@ class BetController extends BaseController
             } else {
                 $losers[] = [
                     'user' => $bet->getUser()->getDisplayName(),
-                    'flair' => $bet->getUser()->getFlair(),
+                    'flair' => ShopHelper::getFlare($bet->getUser()),
                     'amount' => $bet->getAmount()
                 ];
             }

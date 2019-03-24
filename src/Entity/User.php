@@ -47,10 +47,9 @@ class User
     private $creditRedemptionDate;
 
     /**
-     * @ORM\Column(type="string", length=10000, nullable=true)
+     * @ORM\ManyToOne(targetEntity="App\Entity\ShopItem", inversedBy="users")
      */
     private $flair;
-
 
     public function __construct()
     {
@@ -174,12 +173,12 @@ class User
         return $this;
     }
 
-    public function getFlair(): ?string
+    public function getFlair(): ?ShopItem
     {
         return $this->flair;
     }
 
-    public function setFlair(?string $flair): self
+    public function setFlair(?ShopItem $flair): self
     {
         $this->flair = $flair;
 

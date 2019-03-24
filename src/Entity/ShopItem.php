@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -11,8 +13,8 @@ class ShopItem
 {
     const PREFIX = 1;
     const SUFFIX = 2;
-    const COLOUR = 3;
-    const PREFIX_AND_SUFFIX = 4;
+    const PREFIX_AND_SUFFIX = 3;
+    const COLOUR = 4;
 
     /**
      * @ORM\Id()
@@ -40,6 +42,16 @@ class ShopItem
      * @ORM\Column(type="integer")
      */
     private $price;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="flair")
+     */
+    private $users;
+
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -90,6 +102,37 @@ class ShopItem
     public function setPrice(int $price): self
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->setFlair($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->contains($user)) {
+            $this->users->removeElement($user);
+            // set the owning side to null (unless already changed)
+            if ($user->getFlair() === $this) {
+                $user->setFlair(null);
+            }
+        }
 
         return $this;
     }
