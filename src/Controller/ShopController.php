@@ -75,7 +75,7 @@ class ShopController extends BaseController
         $this->getDoctrine()->getManager()->flush();
 
         $response = [
-            'message' => 'Flair updated!'
+            'message' => 'Flair updated to ' . $item->getName() . ' for ' . $item->getPrice()
         ];
         return ResponseHelper::getApiResponse($request, $response);
     }
