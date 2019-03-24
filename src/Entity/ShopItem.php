@@ -9,6 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ShopItem
 {
+    const PREFIX = 1;
+    const SUFFIX = 2;
+    const COLOUR = 3;
+    const PREFIX_AND_SUFFIX = 4;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

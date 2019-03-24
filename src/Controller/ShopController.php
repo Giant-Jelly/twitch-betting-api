@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/shop", name="Shop", methods={"GET", "OPTIONS"})
+ * @Route("/api/shop", name="Shop", methods={"GET", "OPTIONS"})
  *
  * Class ShopController
  * @package App\Controller
