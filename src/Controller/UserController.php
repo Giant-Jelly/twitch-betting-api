@@ -115,6 +115,7 @@ class UserController extends BaseController
         };
 
         $response = [
+            'users' => $list,
             'message' => $entries
         ];
         return ResponseHelper::getApiResponse($request, $response);
