@@ -113,6 +113,7 @@ class OutcomeController extends BaseController
 
         if (count($outcomes) < 1) {
             $response = [
+                'outcomes' => [],
                 'message' => 'There are no outcomes currently'
             ];
             return ResponseHelper::getApiResponse($request, $response);
