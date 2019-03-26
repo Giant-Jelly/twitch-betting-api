@@ -13,7 +13,7 @@ class Outcome
 {
     const COLOURS = [
         '#30acff',
-        '#8330ff',
+        '#effc3f',
         '#ed30ff',
         '#ff304b',
         '#30d9ff'
