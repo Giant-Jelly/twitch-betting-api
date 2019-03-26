@@ -109,7 +109,8 @@ class UserController extends BaseController
             $list[] = [
                 'user' => $user->getDisplayName(),
                 'flair' => ShopHelper::getFlare($user),
-                'badge' => ShopHelper::getBadge($user)
+                'badge' => ShopHelper::getBadge($user),
+                'amounts' => $user->getCredits()
             ];
             $entries .= $key + 1 . '. ' . $user->getDisplayName() . ' - ' . $user->getCredits() . ' | ';
         };
