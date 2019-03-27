@@ -124,7 +124,7 @@ class BetController extends BaseController
      */
     public function lastBets(Request $request, RoundRepository $roundRepository, BetRepository $betRepository): Response
     {
-        $round = $roundRepository->getLatest(1);
+        $round = $roundRepository->getLatest(0);
         /** @var Bet[] $bets */
         $bets = $betRepository->findAllByRound($round);
 
