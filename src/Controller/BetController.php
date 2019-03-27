@@ -76,7 +76,7 @@ class BetController extends BaseController
 
 
         $response = [
-            'message' => $user->getDisplayName().' bet ' . $bet->getAmount() . ' on ' . $outcome->getName()
+            'message' => $user->getDisplayName() . ' bet ' . $bet->getAmount() . ' on ' . $outcome->getName()
         ];
         return ResponseHelper::getApiResponse($request, $response);
     }
@@ -92,8 +92,17 @@ class BetController extends BaseController
      */
     public function list(Request $request, BetRepository $betRepository, RoundRepository $roundRepository): Response
     {
+        $round = $roundRepository->getLatestOngoingRound();
+
+        if (!$round) {
+            $response = [
+                'bets' => []
+            ];
+            return ResponseHelper::getApiResponse($request, $response);
+        }
+
         /** @var Bet[] $bets */
-        $bets = $betRepository->findAllByRound($roundRepository->getLatestOngoingRound());
+        $bets = $betRepository->findAllByRound($round);
 
         $response = [];
         foreach ($bets as $bet) {
