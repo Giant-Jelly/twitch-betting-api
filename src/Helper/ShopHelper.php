@@ -20,7 +20,7 @@ class ShopHelper
             ];
             return $response;
         }
-        return [];
+        return null;
     }
 
     /**
@@ -36,6 +36,6 @@ class ShopHelper
             ];
             return $response;
         }
-        return [];
+        return null;
     }
 }
