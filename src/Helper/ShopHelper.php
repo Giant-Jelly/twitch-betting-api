@@ -10,7 +10,7 @@ class ShopHelper
      * @param User $user
      * @return array
      */
-    public static function getFlare(User $user): array
+    public static function getFlare(User $user): ?array
     {
         $flare = $user->getFlair();
         if ($flare) {
@@ -27,7 +27,7 @@ class ShopHelper
      * @param User $user
      * @return array
      */
-    public static function getBadge(User $user): array
+    public static function getBadge(User $user): ?array
     {
         $badge = $user->getBadge();
         if ($badge) {
