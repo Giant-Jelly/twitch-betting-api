@@ -66,9 +66,10 @@ class Alert implements MessageComponentInterface
 
     public function sendMessage(string $message)
     {
+        echo "Sending message: ".$message;
         /** @var ConnectionInterface $conn */
         foreach ($this->connections as $conn) {
-            echo $message;
+            echo $message . "\n";
             $conn->send($message);
         }
     }
