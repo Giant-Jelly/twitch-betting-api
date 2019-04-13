@@ -59,6 +59,42 @@ class OutcomeController extends BaseController
     }
 
     /**
+     * @Route("/remove", name="Remove", methods={"GET"})
+     *
+     * @param Request $request
+     * @param RoundRepository $roundRepo
+     * @param OutcomeRepository $outcomeRepo
+     * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function removeOutcome(Request $request, RoundRepository $roundRepo, OutcomeRepository $outcomeRepo): Response
+    {
+        $round = $roundRepo->getLatest();
+
+        $outcome = (new Outcome())
+            ->setName($request->get('name'))
+            ->setPayout($request->get('payout', 0.5))
+            ->setRound($round)
+            ->setChoice($outcomeRepo->count(['round' => $round]) + 1)
+            ->setColour(OutcomeHelper::getOutcomeColour($round));
+
+        if (strtolower($outcome->getName()) == 'nathan') {
+            $outcome->setColour('#ff8330');
+        } elseif (strtolower($outcome->getName()) == 'matt') {
+            $outcome->setColour('#82d757');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($outcome);
+        $em->flush();
+
+        $response = [
+            'message' => 'Outcome ' . $outcome->getName() . ' created'
+        ];
+        return ResponseHelper::getApiResponse($request, $response);
+    }
+
+    /**
      * @Route("/repeat", name="Repeat", methods={"GET"})
      *
      * @param Request $request
