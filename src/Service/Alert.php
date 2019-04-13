@@ -55,7 +55,7 @@ class Alert implements MessageComponentInterface
     {
         $message = json_decode(trim($msg));
 
-        print_r($msg);
-        $conn->send("For testing, im just sending back your message: " . $message);
+        print_r($msg->getContents());
+        $conn->send("For testing, im just sending back your message: " . $msg->getContents());
     }
 }
