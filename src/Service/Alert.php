@@ -58,4 +58,18 @@ class Alert implements MessageComponentInterface
         print_r($msg->getPayload());
         $conn->send("For testing, im just sending back your message: " . $msg->getPayload());
     }
+
+    public function getConnections(): array
+    {
+        return $this->connections;
+    }
+
+    public function sendMessage(string $message)
+    {
+        /** @var ConnectionInterface $conn */
+        foreach ($this->connections as $conn) {
+            echo $message;
+            $conn->send($message);
+        }
+    }
 }

@@ -12,6 +12,18 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SocketServerCommand extends Command
 {
+
+    /**
+     * @var Alert
+     */
+    private $alert;
+
+    public function __construct(Alert $alert)
+    {
+        parent::__construct();
+        $this->alert = $alert;
+    }
+
     protected function configure()
     {
         $this->setName('twitch:alerts:server')
@@ -22,7 +34,7 @@ class SocketServerCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $server = IoServer::factory(new HttpServer(
-            new WsServer(new Alert())
+            new WsServer($this->alert)
         ), 8080);
 
         echo "Server Starting\n";

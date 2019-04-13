@@ -14,6 +14,7 @@ use App\Helper\ShopHelper;
 use App\Repository\BetRepository;
 use App\Repository\RoundRepository;
 use App\Response\ApiResponse;
+use App\Service\Alert;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,6 +27,17 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class BetController extends BaseController
 {
+
+    /**
+     * @var Alert
+     */
+    private $alert;
+
+    public function __construct(Alert $alert)
+    {
+        $this->alert = $alert;
+    }
+
     /**
      * @Route("/bet", name="Bet", methods={"GET"})
      *
@@ -74,10 +86,11 @@ class BetController extends BaseController
         BetHelper::adjustCredits($user, -$request->get('amount'));
         $em->flush();
 
-
         $response = [
             'message' => $user->getDisplayName() . ' bet ' . $bet->getAmount() . ' on ' . $outcome->getName()
         ];
+
+        $this->alert->sendMessage($response['message']);
         return ResponseHelper::getApiResponse($request, $response);
     }
 
