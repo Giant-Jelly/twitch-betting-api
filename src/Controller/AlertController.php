@@ -29,7 +29,7 @@ class AlertController extends BaseController
     }
 
     /**
-     * @Route("/twitch", name="Twitch", methods={"GET"})
+     * @Route("/twitch", name="Twitch", methods={"GET", "POST"})
      *
      * @param Request $request
      * @return Response
