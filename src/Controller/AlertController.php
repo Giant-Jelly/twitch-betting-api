@@ -92,7 +92,7 @@ class AlertController extends BaseController
     {
         $first = $request->get('count', 5);
         $client = new Client();
-        $response = $client->request('GET', "https://api.twitch.tv/helix/users/follows?first={$first}to_id=32290603", [
+        $response = $client->request('GET', "https://api.twitch.tv/helix/users/follows?first={$first}&to_id=32290603", [
             'headers' => [
                 'Authorization' => 'Bearer 0xbs09cssol0tpilnpkrqw2hp4h4hw'
             ]
