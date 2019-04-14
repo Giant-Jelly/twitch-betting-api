@@ -32,7 +32,7 @@ class SubscribeToAlertsCommand extends Command
             'json' => [
                 'hub.callback' => 'http://46.101.18.176/alerts/twitch',
                 'hub.mode' => 'subscribe',
-                'hub.topic' => 'https://api.twitch.tv/helix/users/follows?first=1&to_id=1337',
+                'hub.topic' => 'https://api.twitch.tv/helix/users/follows?first=1&to_id=32290603',
                 'hub.lease_seconds' => '600'
             ]
         ]);
