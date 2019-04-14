@@ -45,7 +45,7 @@ class AlertController extends BaseController
             return new JsonResponse($request->get('hub_challenge'), 200, ['Authorization' => 'Bearer 0xbs09cssol0tpilnpkrqw2hp4h4hw']);
         }
 
-        $data = json_decode($request->getContent(), true)['data'];
+        $data = json_decode($request->getContent(), true);
 
         $this->publisher->__invoke(new Update(
             'http://46.101.18.176/alerts',
