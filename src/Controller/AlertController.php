@@ -41,6 +41,6 @@ class AlertController extends BaseController
             json_encode(['alert' => $request->query->all()])
         ));
 
-        return new JsonResponse(['message' => 'success'], 200);
+        return new Response($request->get('hub_challenge'), 200);
     }
 }
