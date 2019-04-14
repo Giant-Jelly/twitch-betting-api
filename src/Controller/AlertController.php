@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Publisher;
 use Symfony\Component\Mercure\Update;
@@ -30,13 +31,14 @@ class AlertController extends BaseController
     /**
      * @Route("/twitch", name="Twitch", methods={"GET"})
      *
+     * @param Request $request
      * @return Response
      */
-    public function handleAlert(): Response
+    public function handleAlert(Request $request): Response
     {
         $this->publisher->__invoke(new Update(
             'http://46.101.18.176/alerts',
-            json_encode(['alert' => 'follower'])
+            json_encode(['alert' => $request->query->all()])
         ));
 
         return new JsonResponse(['message' => 'success'], 200);
