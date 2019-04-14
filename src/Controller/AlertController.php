@@ -50,6 +50,6 @@ class AlertController extends BaseController
             json_encode(['alert' => $request->request->get('data')])
         ));
 
-        return new JsonResponse($request->request->get('data'), 200, ['Authorization' => 'Bearer 0xbs09cssol0tpilnpkrqw2hp4h4hw']);
+        return new JsonResponse($request->request->all(), 200, ['Authorization' => 'Bearer 0xbs09cssol0tpilnpkrqw2hp4h4hw']);
     }
 }
