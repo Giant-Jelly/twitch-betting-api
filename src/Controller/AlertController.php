@@ -38,7 +38,7 @@ class AlertController extends BaseController
     {
         $this->publisher->__invoke(new Update(
             'http://46.101.18.176/alerts',
-            json_encode(['alert' => $request->query->all()])
+            json_encode(['alert' => $request->get('hub_challenge')])
         ));
 
         return new Response($request->get('hub_challenge'), 200);
