@@ -84,12 +84,15 @@ class AlertController extends BaseController
      * @Route("/followers", name="Followers", methods={"GET"})
      *
      *
+     * @param Request $request
+     * @return Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getFollowers(): Response
+    public function getFollowers(Request $request): Response
     {
+        $first = $request->get('count', 5);
         $client = new Client();
-        $response = $client->request('GET', 'https://api.twitch.tv/helix/users/follows?to_id=32290603', [
+        $response = $client->request('GET', "https://api.twitch.tv/helix/users/follows?first={$first}to_id=32290603", [
             'headers' => [
                 'Authorization' => 'Bearer 0xbs09cssol0tpilnpkrqw2hp4h4hw'
             ]
