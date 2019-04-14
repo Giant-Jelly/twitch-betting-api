@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use GuzzleHttp\Client;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,5 +54,47 @@ class AlertController extends BaseController
         ));
 
         return new JsonResponse($data, 200, ['Authorization' => 'Bearer 0xbs09cssol0tpilnpkrqw2hp4h4hw']);
+    }
+
+    /**
+     * @Route("/subscribe", name="Subscribe", methods={"GET"})
+     *
+     * @param Request $request
+     * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function subscribeToAlerts(Request $request): Response
+    {
+        $client = new Client();
+
+        $response = $client->request('POST', 'https://api.twitch.tv/helix/webhooks/hub', [
+            'headers' => [
+                'Authorization' => 'Bearer 0xbs09cssol0tpilnpkrqw2hp4h4hw'
+            ],
+            'json' => [
+                'hub.callback' => 'http://46.101.18.176/alerts/twitch',
+                'hub.mode' => 'subscribe',
+                'hub.topic' => 'https://api.twitch.tv/helix/users/follows?first=1&to_id=26490481',
+                'hub.lease_seconds' => '600'
+            ]
+        ]);
+    }
+
+    /**
+     * @Route("/followers", name="Followers", methods={"GET"})
+     *
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getFollowers(): Response
+    {
+        $client = new Client();
+        $response = $client->request('GET', 'https://api.twitch.tv/helix/users/follows?to_id=32290603', [
+            'headers' => [
+                'Authorization' => 'Bearer 0xbs09cssol0tpilnpkrqw2hp4h4hw'
+            ]
+        ]);
+
+        return new JsonResponse($response);
     }
 }
