@@ -65,6 +65,7 @@ class AlertController extends BaseController
      */
     public function subscribeToAlerts(Request $request): Response
     {
+        $id = $request->get('userId', '32290603'); // Default is GiantJelly account
         $client = new Client();
 
         $response = $client->request('POST', 'https://api.twitch.tv/helix/webhooks/hub', [
@@ -74,10 +75,13 @@ class AlertController extends BaseController
             'json' => [
                 'hub.callback' => 'http://46.101.18.176/alerts/twitch',
                 'hub.mode' => 'subscribe',
-                'hub.topic' => 'https://api.twitch.tv/helix/users/follows?first=1&to_id=26490481',
+                'hub.topic' => "https://api.twitch.tv/helix/users/follows?first=1&to_id={$id}",
                 'hub.lease_seconds' => '600'
             ]
         ]);
+        $res['followers'] = $response->getStatusCode();
+
+        return new JsonResponse($res);
     }
 
     /**
