@@ -14,9 +14,10 @@ use App\Helper\ShopHelper;
 use App\Repository\BetRepository;
 use App\Repository\RoundRepository;
 use App\Response\ApiResponse;
-use App\Service\Alert;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mercure\Publisher;
+use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -29,13 +30,13 @@ class BetController extends BaseController
 {
 
     /**
-     * @var Alert
+     * @var Publisher
      */
-    private $alert;
+    private $publisher;
 
-    public function __construct(Alert $alert)
+    public function __construct(Publisher $publisher)
     {
-        $this->alert = $alert;
+        $this->publisher = $publisher;
     }
 
     /**
@@ -90,7 +91,10 @@ class BetController extends BaseController
             'message' => $user->getDisplayName() . ' bet ' . $bet->getAmount() . ' on ' . $outcome->getName()
         ];
 
-        $this->alert->sendMessage($response['message']);
+        $this->publisher->__invoke(new Update(
+            'http://46.101.18.176/alerts',
+            json_encode(['alert' => 'follower'])
+        ));
         return ResponseHelper::getApiResponse($request, $response);
     }
 
