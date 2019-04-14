@@ -47,9 +47,9 @@ class AlertController extends BaseController
 
         $this->publisher->__invoke(new Update(
             'http://46.101.18.176/alerts',
-            json_encode(['alert' => $request->query->all()])
+            json_encode(['alert' => $request->request->get('data')])
         ));
 
-        return new JsonResponse('', 200, ['Authorization' => 'Bearer 0xbs09cssol0tpilnpkrqw2hp4h4hw']);
+        return new JsonResponse($request->request->get('data'), 200, ['Authorization' => 'Bearer 0xbs09cssol0tpilnpkrqw2hp4h4hw']);
     }
 }
