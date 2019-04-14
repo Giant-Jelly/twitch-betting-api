@@ -95,6 +95,6 @@ class AlertController extends BaseController
             ]
         ]);
 
-        return new JsonResponse($response);
+        return new JsonResponse($response->getBody());
     }
 }
