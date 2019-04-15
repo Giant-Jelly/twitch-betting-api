@@ -12,7 +12,7 @@ use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/alerts", name="Alerts")
+ * @Route("/alerts", name="Alerts", methods={"GET", "OPTIONS"})
  *
  * Class AlertController
  * @package App\Controller
