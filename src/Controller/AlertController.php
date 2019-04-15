@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Helper\ResponseHelper;
 use GuzzleHttp\Client;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -81,7 +82,7 @@ class AlertController extends BaseController
         ]);
         $res['followers'] = $response->getStatusCode();
 
-        return new JsonResponse($res);
+        return ResponseHelper::getApiResponse($request, $res);
     }
 
     /**
@@ -102,6 +103,6 @@ class AlertController extends BaseController
             ]
         ]);
 
-        return new JsonResponse(json_decode($response->getBody()->getContents()));
+        return ResponseHelper::getApiResponse($request, json_decode($response->getBody()->getContents()));
     }
 }
