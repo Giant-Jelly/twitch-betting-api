@@ -105,4 +105,20 @@ class AlertController extends BaseController
 
         return ResponseHelper::getApiResponse($request, json_decode($response->getBody()->getContents()));
     }
+
+    /**
+     * @Route("/test", name="Test", methods={"GET"})
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function test(Request $request): Response
+    {
+        $this->publisher->__invoke(new Update(
+            'http://46.101.18.176/alerts',
+            json_encode(['alert' => "Test is now Following!"])
+        ));
+
+        return ResponseHelper::getApiResponse($request, ['message' => 'Test sent']);
+    }
 }
