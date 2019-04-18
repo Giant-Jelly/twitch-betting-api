@@ -51,7 +51,7 @@ class AlertController extends BaseController
 
         $this->publisher->__invoke(new Update(
             'http://46.101.18.176/alerts',
-            json_encode(['alert' => $data[0]['from_name']])
+            json_encode(['alert' => $data['data'][0]['from_name']])
         ));
 
         return new JsonResponse($data, 200, ['Authorization' => 'Bearer 0xbs09cssol0tpilnpkrqw2hp4h4hw']);
@@ -77,7 +77,7 @@ class AlertController extends BaseController
                 'hub.callback' => 'http://46.101.18.176/alerts/twitch',
                 'hub.mode' => 'subscribe',
                 'hub.topic' => "https://api.twitch.tv/helix/users/follows?first=1&to_id={$id}",
-                'hub.lease_seconds' => '86400'
+                'hub.lease_seconds' => '600' //86400
             ]
         ]);
         $res['followers'] = $response->getStatusCode();
