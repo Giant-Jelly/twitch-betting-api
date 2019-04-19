@@ -77,6 +77,13 @@ class ShopController extends BaseController
             return ResponseHelper::getApiResponse($request, $response);
         }
 
+        if ($user->getCredits() < $item->getPrice()) {
+            $response = [
+                'message' => 'Insufficient credits. You need '. $item->getPrice()
+            ];
+            return ResponseHelper::getApiResponse($request, $response);
+        }
+
         $user->setFlair($item);
         BetHelper::adjustCredits($user, -$item->getPrice());
         $this->getDoctrine()->getManager()->flush();
