@@ -37,7 +37,7 @@ class OutcomeController extends BaseController
 
         $outcome = (new Outcome())
             ->setName($request->get('name'))
-            ->setPayout($request->get('payout', 0.5))
+            ->setPayout(2)
             ->setRound($round)
             ->setChoice($outcomeRepo->count(['round' => $round]) + 1)
             ->setColour(OutcomeHelper::getOutcomeColour($round));

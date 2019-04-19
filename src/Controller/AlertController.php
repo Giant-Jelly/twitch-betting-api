@@ -77,7 +77,7 @@ class AlertController extends BaseController
                 'hub.callback' => 'http://46.101.18.176/alerts/twitch',
                 'hub.mode' => 'subscribe',
                 'hub.topic' => "https://api.twitch.tv/helix/users/follows?first=1&to_id={$id}",
-                'hub.lease_seconds' => '600' //86400
+                'hub.lease_seconds' => '86400' //86400
             ]
         ]);
         $res['followers'] = $response->getStatusCode();

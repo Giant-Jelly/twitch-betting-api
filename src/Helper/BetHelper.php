@@ -38,7 +38,7 @@ class BetHelper
      */
     public static function calculateWinnings(float $odds, int $amount): int
     {
-        return ($amount * $odds) + $amount;
+        return ($amount * $odds);
     }
 
     /**

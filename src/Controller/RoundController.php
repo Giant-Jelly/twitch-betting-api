@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Outcome;
 use App\Entity\Round;
 use App\Helper\BetHelper;
+use App\Helper\OutcomeHelper;
 use App\Helper\ResponseHelper;
 use App\Helper\RoundHelper;
 use App\Repository\OutcomeRepository;
@@ -181,7 +182,7 @@ class RoundController extends BaseController
             $o = (new Outcome())
                 ->setChoice($outcome->getChoice())
                 ->setName($outcome->getName())
-                ->setPayout($outcome->getPayout())
+                ->setPayout(OutcomeHelper::getAdjustedPayout($outcome))
                 ->setRound($newRound)
                 ->setColour($outcome->getColour());
 

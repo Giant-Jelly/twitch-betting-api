@@ -25,4 +25,16 @@ class OutcomeHelper
 
         return $colour;
     }
+
+    /**
+     * @param Outcome $outcome
+     * @return float
+     */
+    public static function getAdjustedPayout(Outcome $outcome):float
+    {
+        if ($outcome->getWon()) {
+            return $outcome->getPayout() + 0.02;
+        }
+        return $outcome->getPayout() - 0.02;
+    }
 }
