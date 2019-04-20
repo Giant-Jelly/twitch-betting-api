@@ -33,8 +33,8 @@ class OutcomeHelper
     public static function getAdjustedPayout(Outcome $outcome):float
     {
         if ($outcome->getWon()) {
-            return $outcome->getPayout() + 0.02;
+            return $outcome->getPayout() - 0.02;
         }
-        return $outcome->getPayout() - 0.02;
+        return $outcome->getPayout() + 0.02;
     }
 }
