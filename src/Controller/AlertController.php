@@ -103,7 +103,7 @@ class AlertController extends BaseController
             ]
         ]);
 
-        return ResponseHelper::getApiResponse($request, json_decode($response->getBody()->getContents()));
+        return ResponseHelper::getApiResponse($request, json_decode($response->getBody()->getContents(), true));
     }
 
     /**
