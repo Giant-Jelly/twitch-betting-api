@@ -90,11 +90,6 @@ class BetController extends BaseController
         $response = [
             'message' => $user->getDisplayName() . ' bet ' . $bet->getAmount() . ' on ' . $outcome->getName()
         ];
-
-        $this->publisher->__invoke(new Update(
-            'http://46.101.18.176/alerts',
-            json_encode(['alert' => 'follower'])
-        ));
         return ResponseHelper::getApiResponse($request, $response);
     }
 
