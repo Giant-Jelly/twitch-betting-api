@@ -52,7 +52,7 @@ class UserController extends BaseController
         $em->flush();
 
         $response = [
-            'message' => $user->getDisplayName() . ' has registered for betting and been awarded ' . User::STARTING_CREDITS . ' credits. Use !betting to find out how to bet.'
+            'message' => $user->getDisplayName() . ' has registered for betting and been awarded ' . User::STARTING_CREDITS . ' credits. Check out the betting panel to see how to bet'
         ];
         return ResponseHelper::getApiResponse($request, $response);
     }
