@@ -3,10 +3,10 @@
   gather_facts: no
 
   vars:
-    domain: localhost
-    domain_alias: localhost
-    project_dir: /var/www/twitch-betting-api/public
-    project_name: twitch-betting-api
+    domain: forged.gg
+    domain_alias: www.forged.gg
+    project_dir: /var/www/forge-web/public
+    project_name: forge
 
   pre_tasks:
 
@@ -48,25 +48,25 @@
       - zip
       - unzip
 
-  - name: Add php 7.1 apt repo
+  - name: Add php 7.3 apt repo
     become: true
     apt_repository:
       repo: "ppa:ondrej/php"
 
-  - name: Install php 7.1
+  - name: Install php 7.3
     become: true
     apt:
       name: "{{ item }}"
       state: latest
     with_items:
-      - libapache2-mod-php7.1
-      - php7.1-mcrypt
-      - php7.1-mysql
-      - php7.1-dom
-      - php7.1-mbstring
-      - php7.1-gd
-      - php7.1-zip
-      - php7.1-curl
+      - libapache2-mod-php7.3
+      - php7.3-mcrypt
+      - php7.3-mysql
+      - php7.3-dom
+      - php7.3-mbstring
+      - php7.3-gd
+      - php7.3-zip
+      - php7.3-curl
 
   - name: Set apache config
     become: true
@@ -106,7 +106,7 @@
       mode: "a+x"
 
   - name: set mysql root password
-    mysql_user: name=root host={{ item }} password=Themage1
+    mysql_user: name=root host={{ item }} password=
     with_items:
     - 127.0.0.1
     - ::1
